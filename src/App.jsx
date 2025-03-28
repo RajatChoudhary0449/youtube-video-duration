@@ -7,7 +7,7 @@ import gettimefromdata from './utils/gettimefromdata';
 import formatDuration from './utils/formatDuration';
 import useDataContext from './hooks/useDataContext';
 function App() {
-  const { data, setdata, time, settime, curpage, setCurPage, settotalTime } = useDataContext();
+  const { data, setdata, time, settime, curpage, setCurPage, settotalTime, offset } = useDataContext();
   const [link, setLink] = useState("")
   const [start, setstart] = useState(-1)
   const [end, setend] = useState(Infinity)
@@ -17,16 +17,15 @@ function App() {
   const [filteredData, setFilteredData] = useState([]);
 
   const [totalPages, setTotalPage] = useState(0);
-  const offset = 10;
 
   const inputref = useRef();
   useEffect(() => {
     setTotalPage(Math.ceil((time.length) / offset));
     setFilteredData(time.slice(0, offset));
-  }, [time]);
+  }, [time, offset]);
 
   useEffect(() => {
-    setFilteredData(time.slice((curpage - 1) * offset, curpage * offset));
+    setFilteredData(time.slice((curpage - 1) * offset, curpage * offset + 1));
   }, [curpage, offset]);
 
   useEffect(() => {
@@ -99,7 +98,7 @@ function App() {
       <form onSubmit={handleformrequest}>
 
         <label htmlFor="link">Enter the link of the YouTube playlist:</label>
-        <input type="text" id="link" ref={inputref} placeholder="Playlist URL" autoFocus value={link} onChange={(e) => { handlechangelink(e); }} onFocus={(e) => { setstart(-1); setend(Infinity); }} ></input>
+        <input type="text" id="link" ref={inputref} placeholder="Playlist URL" autoFocus value={link} onChange={(e) => { handlechangelink(e); }} onFocus={() => { setstart(-1); setend(Infinity); }} ></input>
 
         <label htmlFor="start">Starting Video Index (1-based):</label>
         <input type="number" id="start" placeholder="Start Index(Optional)" value={(start === -1) ? '' : start} onChange={(e) => setstart(Number(e.target.value))} min={1} step={1} contentEditable={!fetching} />
