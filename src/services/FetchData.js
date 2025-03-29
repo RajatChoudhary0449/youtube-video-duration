@@ -1,6 +1,5 @@
 import extractPlaylistId from "../utils/extractPlaylistId";
-
-export const FetchData = async (link) => {
+export default async function FetchData(link) {
     const apiKey = import.meta.env.VITE_APP_API_KEY;
     const playlistId = extractPlaylistId(link);
     if (!playlistId) {

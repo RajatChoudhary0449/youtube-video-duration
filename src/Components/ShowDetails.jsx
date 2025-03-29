@@ -2,7 +2,9 @@ import React, { useState } from 'react'
 import Details from './Details';
 import './ShowDetails.css';
 import Pagination from './Pagination';
-export default function ShowDetails({ data, totalPages }) {
+import useDataContext from '../hooks/useDataContext';
+export default function ShowDetails({ data }) {
+    const {totalPages}=useDataContext();
     const [isvisible, setisvisible] = useState(false);
     const [text, settext] = useState("show details");
     const handleDetails = (e) => {
@@ -20,7 +22,7 @@ export default function ShowDetails({ data, totalPages }) {
             </div>
             <div className="Details" >
                 {isvisible && <>
-                    <Details items={data} totalPages={totalPages}/>
+                    <Details items={data}/>
                     <Pagination totalPages={totalPages}></Pagination>
                 </>}
             </div>

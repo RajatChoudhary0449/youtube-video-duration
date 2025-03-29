@@ -5,8 +5,8 @@ import divideTheTime from '../utils/divideTheTime';
 import useDataContext from '../hooks/useDataContext';
 import formatDuration from '../utils/formatDuration';
 export default function Details(props) {
-    const { items, totalPages } = props;
-    const { offset, setOffset,setCurPage} = useDataContext();
+    const { items } = props;
+    const { offset, setOffset, setCurPage, totalPages } = useDataContext();
     const { time, totalTime } = useDataContext();
     const [speed, setSpeed] = useState(1);
     const handleSelectChange = (e) => {
@@ -55,7 +55,6 @@ export default function Details(props) {
                     <div className="col-md-6 mb-2">
                         <div className="d-flex align-items-center">
                             <h4 className="me-2">Entity Per Page:</h4>
-                            {/* <p className="mb-1">{totalPages}</p> */}
                             <input className='w-25' value={offset} type='number' min={1} onChange={(e) => {
                                 setOffset(Math.max(Number(e.target.value), 1))
                                 setCurPage(1);
@@ -69,8 +68,10 @@ export default function Details(props) {
                 <thead>
                     <tr>
                         <th className='index-column'>Index</th>
-                        <th>Current Time</th>
-                        <th>Accumulated Time</th>
+                        <th>Title</th>
+                        <th>Channel Name</th>
+                        <th>Thumbnail</th>
+                        <th>Duration</th>
                     </tr>
                 </thead>
                 <tbody>
