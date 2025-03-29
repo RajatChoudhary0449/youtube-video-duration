@@ -4,7 +4,7 @@ import './ShowDetails.css';
 import Pagination from './Pagination';
 import useDataContext from '../hooks/useDataContext';
 export default function ShowDetails({ data }) {
-    const {totalPages}=useDataContext();
+    const { totalPages } = useDataContext();
     const [isvisible, setisvisible] = useState(false);
     const [text, settext] = useState("show details");
     const handleDetails = (e) => {
@@ -22,7 +22,7 @@ export default function ShowDetails({ data }) {
             </div>
             <div className="Details" >
                 {isvisible && <>
-                    <Details items={data}/>
+                    <Details items={data} />
                     <Pagination totalPages={totalPages}></Pagination>
                 </>}
             </div>

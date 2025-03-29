@@ -1,19 +1,21 @@
 import './App.css';
 import React, { useEffect, useRef, useState } from 'react'
 import ShowDetails from './Components/ShowDetails'
-import FetchData from './services/FetchData'
 import divideTheTime from './utils/divideTheTime';
-import getTimeAndDetailsFromData from './services/getTimeAndDetailsFromData';
 import formatDuration from './utils/formatDuration';
 import useDataContext from './hooks/useDataContext';
+import validation from './validation/validation';
+import getTimeAndDetailsFromData from './services/getTimeAndDetailsFromData';
+import fetchIDs from './services/fetchIDs';
+import fetchDetailsFromIds from './services/fetchDetailsFromIds';
 function App() {
-  const { setdata, time, settime, curpage, setCurPage, setTotalPage, settotalTime, offset } = useDataContext();
+  const { setData, time, setTime, curpage, setCurPage, setTotalPage, settotalTime, offset } = useDataContext();
   const [link, setLink] = useState("")
-  const [start, setstart] = useState(-1)
-  const [end, setend] = useState(Infinity)
+  const [start, setStart] = useState(-1)
+  const [end, setEnd] = useState(Infinity)
   const [fetching, setFetching] = useState(false);
-  const [resultmessage, setresultmessage] = useState("");
-  const [averagemessage, setaveragemessage] = useState("");
+  const [resultMessage, setresultMessage] = useState("");
+  const [averageMessage, setaverageMessage] = useState("");
   const [filteredData, setFilteredData] = useState([]);
 
   const inputref = useRef();
@@ -25,66 +27,46 @@ function App() {
     setFilteredData(time.slice((curpage - 1) * offset, curpage * offset));
   }, [time, curpage, offset]);
 
-  function validation(start, end) {
-    if (end < start) {
-      return [false, "End cannot be set less than start"];
-    }
-    return [true, "Good to go"];
-  }
   const handleformrequest = async (e) => {
     e.preventDefault();
-    const [validated, message] = validation(start, end);
+    const [validated, validationMessage] = validation(start, end,link);
     if (!validated) {
-      alert(message);
-      return;
-    }
-    if (!link.length) {
-      alert("Link cannot be left empty");
+      alert(validationMessage);
       return;
     }
     setFetching(true);
-    const [res, result, average] = await FetchData(link);
-    if (res.length === 0) {
+    const [videoIds,message]=await fetchIDs(link);
+    if(videoIds.length===0)
+    {
       setFetching(false);
-      inputref.current.focus()
-      alert("Please check the link");
+      alert(message);
       return;
     }
+    const [res, curmessage] = await fetchDetailsFromIds(videoIds);
+    if (res.length === 0) {
+      setFetching(false);
+      alert(curmessage);
+      return;
+    }
+
     if (start > res.length || (end !== Infinity && end > res.length)) {
-      setstart(-1);
-      setend(Infinity);
+      setStart(-1);
+      setEnd(Infinity);
       setFetching(false);
       alert("Start or End out of range");
       return;
     }
-    if (result) {
-      setresultmessage(result);
-      setFetching(false);
-      return;
-    }
-    if (average) {
-      setaveragemessage(average);
-      setFetching(false);
-      return;
-    }
-    setdata(res);
+
     const rawtimes = await getTimeAndDetailsFromData(res, start, end);
-    settime(rawtimes);
-    if (res.length === 0) {
-      setFetching(false);
-      return;
-    }
     const curtotaltime = rawtimes?.[rawtimes.length - 1]?.['totaltime'];
-    if (!curtotaltime) {
-      setFetching(false);
-      alert("Went here")
-      return;
-    }
+    setData(res);
+    setTime(rawtimes);
     settotalTime(curtotaltime);
-    setresultmessage(`Total Duration: ${formatDuration(curtotaltime)}`);
-    setaveragemessage(`Average Duration: ${formatDuration(divideTheTime(curtotaltime, rawtimes.length))}`);
+    setresultMessage(`Total Duration: ${formatDuration(curtotaltime)}`);
+    setaverageMessage(`Average Duration: ${formatDuration(divideTheTime(curtotaltime, rawtimes.length))}`);
     setFetching(false);
   }
+
   const handlechangelink = (e) => {
     const cur = e.target.value;
     setLink(cur);
@@ -97,19 +79,19 @@ function App() {
       <form onSubmit={handleformrequest}>
 
         <label htmlFor="link">Enter the link of the YouTube playlist:</label>
-        <input type="text" id="link" ref={inputref} placeholder="Playlist URL" disabled={fetching} autoFocus value={link} onChange={(e) => { handlechangelink(e); }} onFocus={() => { setstart(-1); setend(Infinity); }} ></input>
+        <input type="text" id="link" ref={inputref} placeholder="Playlist URL" disabled={fetching} autoFocus value={link} onChange={(e) => { handlechangelink(e); }} onFocus={() => { setStart(-1); setEnd(Infinity); }} ></input>
 
         <label htmlFor="start">Starting Video Index (1-based):</label>
-        <input type="number" id="start" placeholder="Start Index(Optional)" value={(start === -1) ? '' : start} onChange={(e) => setstart(Number(e.target.value))} min={1} step={1} disabled={fetching} />
-        <span className='d-flex text-primary justify-content-end' onClick={() => setstart(-1)}>Set Default</span>
+        <input type="number" id="start" placeholder="Start Index(Optional)" value={(start === -1) ? '' : start} onChange={(e) => setStart(Number(e.target.value))} min={1} step={1} disabled={fetching} />
+        <span className='d-flex text-primary justify-content-end' style={{ cursor: "pointer" }} onClick={() => setStart(-1)}>Clear</span>
 
         <label htmlFor="end">Ending Video Index (1-based):</label>
-        <input type="number" step="1" id="end" placeholder="End Index(Optional)" value={end === Infinity ? '' : end} min={1} onChange={(e) => setend(Number(e.target.value))} disabled={fetching} />
-        <span className='d-flex text-primary justify-content-end' onClick={() => setend(Infinity)}>Set Default</span>
+        <input type="number" step="1" id="end" placeholder="End Index(Optional)" value={end === Infinity ? '' : end} min={1} onChange={(e) => setEnd(Number(e.target.value))} disabled={fetching} />
+        <span className='d-flex text-primary justify-content-end' style={{ cursor: "pointer" }} onClick={() => setEnd(Infinity)}>Clear</span>
 
         <button id="calculate" type='submit' className={`btn btn-${fetching ? "secondary" : "success"} p-2 mt-2`} disabled={fetching}>{fetching ? "Fetching..." : "Get Total Duration"}</button>
-        <p id="result">{resultmessage}</p>
-        <p>{averagemessage}</p>
+        <p id="result">{resultMessage}</p>
+        <p>{averageMessage}</p>
         {!fetching && <ShowDetails data={filteredData} ></ShowDetails>}
       </form >
     </div >

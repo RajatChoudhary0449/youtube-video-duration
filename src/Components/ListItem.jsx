@@ -12,7 +12,7 @@ export default function ListItem({ item }) {
     const handleImageLoad = () => {
         setIsLoading(false);
     };
-    
+
     const handleImageError = () => {
         setIsLoading(false);
         setImageURL(defaultimage);
@@ -20,15 +20,23 @@ export default function ListItem({ item }) {
 
     const Image = () => (<img src={imageURL} width={width} height={height} alt={`Thumbnail for video titled as: ${detail.title}`} onLoad={handleImageLoad} onError={handleImageError} />);
 
+    const formatDate = (date) => {
+        const year = date.slice(0, 4);
+        const month = date.slice(5, 7);
+        const day = date.slice(8, 10);
+        return `${day}-${month}-${year}`;
+    }
     return (
         <tr>
             <td>{idx}</td>
             <td>{showFull ? (detail.title) : detail.title.slice(0, offsetlength) + "..."}
                 <span className={`${showFull ? "d-none" : "d-inline"} text-primary`} onClick={() => setShowFull(true)} style={{ cursor: 'pointer' }}>Show Complete</span>
             </td>
-            <td>{detail.channelTitle}</td>
+            {/* <td>{detail.channelTitle}</td> */}
             <td>{isLoading && <div>Loading...</div>}<Image></Image></td>
             <td>{formatDuration(curtime)}</td>
+            <td>{formatDate(detail.publishedAt.slice(0, 10))}</td>
+            <td><button className='btn border' type='button' onClick={()=>window.open(`https://www.youtube.com/watch?v=${detail.id}`, '_blank')}>Watch</button></td>
         </tr>
     )
 }
