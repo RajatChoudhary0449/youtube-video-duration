@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import formatDuration from '../utils/formatDuration';
 import defaultimage from '../assets/Images/default.jpg'
 export default function ListItem({ item }) {
@@ -8,17 +8,20 @@ export default function ListItem({ item }) {
     const [isLoading, setIsLoading] = useState(true);
     const [imageURL, setImageURL] = useState(url);
     const [showFull, setShowFull] = useState(detail.title.length <= offsetlength);
+    const imgRef = useRef();
 
     const handleImageLoad = () => {
         setIsLoading(false);
+        imgRef.current.style.display="block";
     };
-
+    
     const handleImageError = () => {
         setIsLoading(false);
         setImageURL(defaultimage);
+        imgRef.current.style.display="block";
     }
 
-    const Image = () => (<img src={imageURL} width={width} height={height} alt={`Thumbnail for video titled as: ${detail.title}`} onLoad={handleImageLoad} onError={handleImageError} />);
+    const Image = () => (<img src={imageURL} width={width} height={height} alt={`Thumbnail for video titled as: ${detail.title}`} onLoad={handleImageLoad} onError={handleImageError} ref={imgRef} style={{ display: "none" }} />);
 
     const formatDate = (date) => {
         const year = date.slice(0, 4);
@@ -33,10 +36,12 @@ export default function ListItem({ item }) {
                 <span className={`${showFull ? "d-none" : "d-inline"} text-primary`} onClick={() => setShowFull(true)} style={{ cursor: 'pointer' }}>Show Complete</span>
             </td>
             {/* <td>{detail.channelTitle}</td> */}
-            <td>{isLoading && <div>Loading...</div>}<Image></Image></td>
+            <td>{isLoading && <div>Loading Image...</div>}
+                <Image></Image>
+            </td>
             <td>{formatDuration(curtime)}</td>
             <td>{formatDate(detail.publishedAt.slice(0, 10))}</td>
-            <td><button className='btn border' type='button' onClick={()=>window.open(`https://www.youtube.com/watch?v=${detail.id}`, '_blank')}>Watch</button></td>
+            <td><button className='btn border' type='button' onClick={() => window.open(`https://www.youtube.com/watch?v=${detail.id}`, '_blank')}>Watch</button></td>
         </tr>
     )
 }

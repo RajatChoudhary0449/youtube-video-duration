@@ -1,44 +1,47 @@
 table {
     width: 100%;
     border-collapse: collapse;
-    /* Merge borders */
     margin: 20px 0;
-    /* Space around the table */
 }
 
 th,
 td {
     padding: 12px 15px;
-    /* Padding inside cells */
     text-align: left;
-    /* Align text to the left */
     border: 1px solid #ddd;
-    /* Light gray border */
 }
 
 th {
     background-color: #f4f4f4;
-    /* Light gray background for headers */
     font-weight: bold;
-    /* Bold text for headers */
 }
 
 tbody tr:nth-child(even) {
     background-color: #f9f9f9;
-    /* Light background for even rows */
 }
 
 tbody tr:hover {
     background-color: #f1f1f1;
-    /* Highlight row on hover */
 }
 
 td {
     font-size: 14px;
-    /* Font size for table data */
 }
 
-.index-column {
-    width: 50px;
-    /* Set a fixed width for the index column */
+
+.scroll-hint {
+    display: none !important;
+}
+
+@media (max-width: 767px) {
+    .scroll-hint {
+        display: flex;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .scroll-hint span {
+        font-weight: bold;
+    }
 }

@@ -4,7 +4,7 @@ export default function Pagination({ totalPages }) {
     const array = Array.from({ length: totalPages }, (_, i) => i + 1);
     return (
         <div className="d-flex justify-content-center align-items-center mx-3">
-            <button className="btn w-auto btn-primary me-2" type="button" onClick={(e) => { e.preventDefault(); setCurPage(curpage - 1) }} disabled={curpage === 1 || totalPages === 0}>Prev</button>
+            <button className="btn w-auto btn-primary me-2" type="button" onClick={(e) => { e.preventDefault(); setCurPage(curpage - 1) }} disabled={curpage === 1 || totalPages === 0}><i className="fas fa-arrow-left"></i>Prev</button>
 
             <select
                 value={curpage}
@@ -20,7 +20,7 @@ export default function Pagination({ totalPages }) {
                 ))}
             </select>
 
-            <button className="btn w-auto btn-primary ms-2" type="button" onClick={() => { setCurPage(curpage + 1) }} disabled={curpage === totalPages || totalPages === 0}>Next</button>
+            <button className="btn w-auto btn-primary ms-2" type="button" onClick={() => { setCurPage(curpage + 1) }} disabled={curpage === totalPages || totalPages === 0}>Next<i className="fas fa-arrow-right"></i></button>
         </div>
 
     );

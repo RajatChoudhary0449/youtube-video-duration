@@ -1,3 +1,4 @@
+import { VIDEOLIMIT } from "../constant/values";
 import extractPlaylistId from "../utils/extractPlaylistId";
 
 export default async function fetchIDs(link) {
@@ -31,6 +32,7 @@ export default async function fetchIDs(link) {
         videoIds = [...videoIds, ...ids];
         nextPageToken = curdata.nextPageToken;
     }
-    while (nextPageToken);
-    return [videoIds,"Good to go"];
+    while (nextPageToken && videoIds.length < VIDEOLIMIT);
+    videoIds = videoIds.slice(0, VIDEOLIMIT);
+    return [videoIds, "Good to go"];
 }

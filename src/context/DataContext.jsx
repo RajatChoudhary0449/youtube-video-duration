@@ -11,8 +11,10 @@ export const DataContextProvider = ({ children }) => {
 
     const [totalTime, settotalTime] = useState([0, 0, 0, 0]);
     const [offset, setOffset] = useState(10);
+
+    const [category, setCategory] = useState("");
     return (
-        <DataContext.Provider value={{ data, setData, time, setTime, curpage, setCurPage, totalTime, settotalTime, totalPages, setTotalPage, offset, setOffset }}>
+        <DataContext.Provider value={{ data, setData, time, setTime, curpage, setCurPage, totalTime, settotalTime, totalPages, setTotalPage, offset, setOffset, category, setCategory }}>
             {children}
         </DataContext.Provider>
     );
