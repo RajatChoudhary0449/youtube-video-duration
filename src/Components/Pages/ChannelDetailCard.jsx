@@ -2,11 +2,11 @@ import { useRef, useState } from "react";
 import defaultImage from './../../assets/Images/default.jpg'
 export default function ChannelDetailCard({ showChannelDetail, setShowChannelDetail, channelDetail }) {
     const [loading, setLoading] = useState(true);
-    console.log(channelDetail)
     const [imageUrl, setImageUrl] = useState(channelDetail?.thumbnails?.high?.url)
     const imgRef = useRef();
-    const handleOnLoad = () => {
+    const handleOnLoad = (e) => {
         setLoading(false);
+        console.log(e);
         imgRef.current.style.display = "block";
     }
     const handleOnError = () => {
