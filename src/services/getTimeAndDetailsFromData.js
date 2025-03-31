@@ -1,6 +1,7 @@
 import { DEFAULTEND, DEFAULTSTART, VIDEOLIMIT } from "../constant/values";
 import parseISO8601Duration from "../utils/parseISO8601Duration";
 import roundoftime from "../utils/roundoftime";
+import toastNotification from "../utils/toastNotification";
 export default async function getTimeAndDetailsFromData(data, start, end) {
   if (!data.length) return [];
   let arr = [];
@@ -18,7 +19,7 @@ export default async function getTimeAndDetailsFromData(data, start, end) {
     arr.push({ idx: idx, curtime: curtime, totaltime: [...totaltime], detail: { ...snippet, id: videoId }, id: videoId });
   }
   if (arr.length === VIDEOLIMIT) {
-    alert(`Maximum video is constrained to ${VIDEOLIMIT}`);
+    toastNotification(`Maximum video is constrained to ${VIDEOLIMIT}`, "info");
   }
   return arr;
 }

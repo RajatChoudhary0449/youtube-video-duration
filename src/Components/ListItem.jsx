@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import formatDuration from '../utils/formatDuration';
 import defaultimage from '../assets/Images/default.jpg'
+import toastNotification from '../utils/toastNotification';
 export default function ListItem({ item, openModal }) {
     const offsetlength = 95;
     const { idx, curtime, detail } = item;
@@ -29,6 +30,17 @@ export default function ListItem({ item, openModal }) {
         const day = date.slice(8, 10);
         return `${day}-${month}-${year}`;
     }
+
+    const handleCopy = () => {
+        const youtubeLink = `https://www.youtube.com/watch?v=${detail.id}`;
+        navigator.clipboard.writeText(youtubeLink).then(() => {
+            toastNotification('Video URL copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            toastNotification('Failed to copy the URL',"error");
+        });
+    }
+    
     return (
         <>
             <tr onClick={() => openModal(detail.id)}>
@@ -42,9 +54,9 @@ export default function ListItem({ item, openModal }) {
                 <td>{formatDuration(curtime)}</td>
                 <td>{formatDate(detail.publishedAt.slice(0, 10))}</td>
                 <td onClick={(e) => { e.stopPropagation() }}>
-                    <div className='d-flex flex-row'>
-                        <button className='btn border mx-2 new-tab' type='button' onClick={() => window.open(`https://www.youtube.com/watch?v=${detail.id}`, '_blank')}>New tab</button>
-                        <button className='btn border' type='button' onClick={() => openModal(detail.id)}>Preview</button>
+                    <div className='d-flex flex-row justify-content-center'>
+                        <button className='btn border' type='button' title='Preview' onClick={() => openModal(detail.id)}><i className='fas fa-eye'></i></button>
+                        <button className='btn border ms-2' type='button' title='Copy' onClick={handleCopy}><i className='fas fa-copy'></i></button>
                     </div>
                 </td>
             </tr>

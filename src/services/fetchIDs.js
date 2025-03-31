@@ -1,6 +1,6 @@
 import { VIDEOLIMIT } from "../constant/values";
 import extractPlaylistId from "../utils/extractPlaylistId";
-
+import toastNotification from "../utils/toastNotification";
 export default async function fetchIDs(link) {
     const apiKey = import.meta.env.VITE_APP_API_KEY;
     const playlistId = extractPlaylistId(link);
@@ -23,7 +23,7 @@ export default async function fetchIDs(link) {
         }
         catch (error) {
             console.log(error);
-            alert("Network Error");
+            toastNotification("Network Error");
             return [[], error];
         }
         const curdata = await response.json();

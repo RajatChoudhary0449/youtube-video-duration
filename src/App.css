@@ -30,9 +30,7 @@ label {
   color: #555;
 }
 
-input[type="text"],
-input[type="number"],
-button {
+.abc {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
@@ -48,9 +46,6 @@ button {
   font-weight: bold;
 }
 
-button:hover {
-  background-color: #218838;
-}
 
 p {
   text-align: center;

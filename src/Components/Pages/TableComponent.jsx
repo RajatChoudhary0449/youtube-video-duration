@@ -31,7 +31,7 @@ export default function TableComponent({ items }) {
                         <th>Thumbnail</th>
                         <th>Duration</th>
                         <th>Published Date</th>
-                        <th>Watch</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>

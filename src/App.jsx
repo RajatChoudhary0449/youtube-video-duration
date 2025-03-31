@@ -2,6 +2,7 @@ import './App.css';
 import React, { useEffect, useRef, useState } from 'react'
 import divideTheTime from './utils/divideTheTime';
 import formatDuration from './utils/formatDuration';
+import toastNotification from './utils/toastNotification';
 import useDataContext from './hooks/useDataContext';
 import validation from './validation/validation';
 import getTimeAndDetailsFromData from './services/getTimeAndDetailsFromData';
@@ -22,6 +23,25 @@ function App() {
   const [filteredData, setFilteredData] = useState([]);
   const [showDetail, setShowDetail] = useState(false);
 
+  const [placeholder, setPlaceholder] = useState(0);
+  const array = ["https://www.youtube.com/playlist?list=UID", "https://www.youtube.com/watch?v=UID&list=UID"]
+
+  const intervalRef = useRef();
+  useEffect(() => {
+    if (!link.length) {
+      intervalRef.current = setInterval(() => {
+        setPlaceholder(prev => (prev + 1) % array.length);
+      }, 2000);
+    }
+    else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    }
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current) };
+  }, [array.length, link.length]);
+
   const inputref = useRef();
   useEffect(() => {
     setTotalPage(Math.ceil((time.length) / offset));
@@ -38,22 +58,23 @@ function App() {
     setFilteredData([]);
     setResultMessage([]);
     setAverageMessage([]);
+    setShowDetail(false);
     const [validated, validationMessage] = validation(start, end, link);
     if (!validated) {
-      alert(validationMessage);
+      toastNotification(validationMessage, "error");
       return;
     }
     setFetching(true);
     const [videoIds, message] = await fetchIDs(link);
     if (videoIds.length === 0) {
       setFetching(false);
-      alert(message);
+      toastNotification(message, "error");
       return;
     }
     const [res, curmessage] = await fetchDetailsFromIds(videoIds);
     if (res.length === 0) {
       setFetching(false);
-      alert(curmessage);
+      toastNotification(curmessage, "error");
       return;
     }
 
@@ -62,7 +83,7 @@ function App() {
       setStart(DEFAULTSTART);
       setEnd(DEFAULTEND);
       setFetching(false);
-      alert("Start or End out of range");
+      toastNotification("Start or End out of range", "info");
       return;
     }
     const [curcategory, categoryMessage] = await fetchCategoryDetailFromVideoDetail(res);
@@ -71,7 +92,7 @@ function App() {
       setStart(DEFAULTSTART);
       setEnd(DEFAULTEND);
       setFetching(false);
-      alert(categoryMessage);
+      toastNotification(categoryMessage, "error");
       return;
     }
     setCategory(curcategory);
@@ -83,6 +104,7 @@ function App() {
     setResultMessage(`Total Duration: ${formatDuration(curtotaltime)}`);
     setAverageMessage(`Average Duration: ${formatDuration(divideTheTime(curtotaltime, rawtimes.length))}`);
     setFetching(false);
+    toastNotification("Fetched Successfully", "success");
   }
 
   const handleStartChange = (e) => {
@@ -106,21 +128,21 @@ function App() {
       <form onSubmit={handleformrequest}>
         <label htmlFor="link">Enter the link of the YouTube playlist:<i className="fa fa-asterisk text-danger"></i>
         </label>
-        <input type="text" id="link" ref={inputref} placeholder="Playlist URL" disabled={fetching} autoFocus value={link} onChange={(e) => { handlechangelink(e); }}></input>
+        <input type="text" id="link" ref={inputref} placeholder={array[placeholder]} disabled={fetching} autoFocus value={link} onChange={(e) => { handlechangelink(e); }} className='abc'></input>
         <span className='d-flex text-primary justify-content-end' style={{ cursor: "pointer" }} onClick={() => setLink("")}>Clear</span>
 
         <label htmlFor="start">Starting Video Index (1-based):</label>
-        <input type="number" id="start" placeholder="Start Index(Optional)" value={(start === DEFAULTSTART) ? '' : start} onChange={handleStartChange} min={1} step={1} disabled={fetching} />
+        <input type="number" id="start" placeholder="Start Index(Optional)" value={(start === DEFAULTSTART) ? '' : start} onChange={handleStartChange} min={1} step={1} disabled={fetching} className='abc' />
         <span className='d-flex text-primary justify-content-end' style={{ cursor: "pointer" }} onClick={() => setStart(DEFAULTSTART)}>Clear</span>
 
         <label htmlFor="end">Ending Video Index (1-based):</label>
-        <input type="number" step="1" id="end" placeholder="End Index(Optional)" value={end === DEFAULTEND ? '' : end} min={1} onChange={handleEndChange} disabled={fetching} />
+        <input type="number" step="1" id="end" placeholder="End Index(Optional)" value={end === DEFAULTEND ? '' : end} min={1} onChange={handleEndChange} disabled={fetching} className='abc' />
         <span className='d-flex text-primary justify-content-end' style={{ cursor: "pointer" }} onClick={() => setEnd(DEFAULTEND)}>Clear</span>
 
-        <button id="calculate" type='submit' className={`btn btn-${fetching ? "secondary" : "success"} p-2 my-2`} disabled={fetching}>{fetching ? "Fetching..." : "Get Total Duration"}</button>
+        <button id="calculate" type='submit' className={`btn  btn-${fetching ? "secondary" : "success"} py-2 abc`} disabled={fetching}>{fetching ? "Fetching..." : "Get Total Duration"}</button>
         <p>{resultMessage}</p>
         <p>{averageMessage}</p>
-        
+
         {!fetching &&
           <>
             <div className="Link-header">
