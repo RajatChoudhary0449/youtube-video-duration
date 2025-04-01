@@ -23,15 +23,14 @@ function App() {
   const [averageMessage, setAverageMessage] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [showDetail, setShowDetail] = useState(false);
-
-  const [placeholder, setPlaceholder] = useState(0);
-  const array = ["https://www.youtube.com/playlist?list=UID", "https://www.youtube.com/watch?v=UID&list=UID"]
-
+  const placeholderRef = useRef(0);
+  const array = ["https://www.youtube.com/playlist?list=UID", "https://www.youtube.com/watch?v=UID&list=UID"];
   const intervalRef = useRef();
   useEffect(() => {
     if (!link.length) {
       intervalRef.current = setInterval(() => {
-        setPlaceholder(prev => (prev + 1) % array.length);
+        placeholderRef.current = (placeholderRef.current + 1) % array.length;
+        inputref.current.placeholder=array[placeholderRef.current];
       }, 2000);
     }
     else {
@@ -41,7 +40,7 @@ function App() {
       }
     }
     return () => { if (intervalRef.current) clearInterval(intervalRef.current) };
-  }, [array.length, link.length]);
+  }, [array.length, link.length,array]);
 
   const inputref = useRef();
   useEffect(() => {
@@ -129,7 +128,9 @@ function App() {
       <form onSubmit={handleformrequest}>
         <label htmlFor="link">Enter the link of the YouTube playlist:<i className="fa fa-asterisk text-danger"></i>
         </label>
-        <input type="text" id="link" ref={inputref} placeholder={array[placeholder]} disabled={fetching} autoFocus value={link} onChange={(e) => { handlechangelink(e); }} className='abc'></input>
+
+        <input type="text" id="link" ref={inputref} placeholder={array[placeholderRef.current]} disabled={fetching} autoFocus value={link} onChange={(e) => { handlechangelink(e); }} className='abc' />
+
         <span className='d-flex text-primary justify-content-end' style={{ cursor: "pointer" }} onClick={() => setLink("")}>Clear</span>
 
         <label htmlFor="start">Starting Video Index (1-based):</label>

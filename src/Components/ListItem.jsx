@@ -4,7 +4,8 @@ import defaultimage from '../assets/Images/default.jpg'
 import toastNotification from '../utils/toastNotification';
 import { ClipLoader } from 'react-spinners';
 export default function ListItem({ item, openModal }) {
-    const offsetlength = 95;
+    const isMobile = window.innerWidth <= 768;
+    const offsetlength = isMobile ? 30 : 95;
     const { idx, curtime, detail } = item;
     let { url, width, height } = detail.thumbnails.default;
     const [isLoading, setIsLoading] = useState(true);
@@ -23,8 +24,6 @@ export default function ListItem({ item, openModal }) {
         imgRef.current.style.display = "block";
     }
 
-    const Image = () => (<img src={imageURL} width={width} height={height} alt={`Thumbnail for video titled as: ${detail.title}`} onLoad={handleImageLoad} onError={handleImageError} ref={imgRef} style={{ display: "none" }} />);
-
     const formatDate = (date) => {
         const year = date.slice(0, 4);
         const month = date.slice(5, 7);
@@ -38,10 +37,10 @@ export default function ListItem({ item, openModal }) {
             toastNotification('Video URL copied to clipboard!');
         }).catch(err => {
             console.error('Failed to copy: ', err);
-            toastNotification('Failed to copy the URL',"error");
+            toastNotification('Failed to copy the URL', "error");
         });
     }
-    
+
     return (
         <>
             <tr onClick={() => openModal(detail.id)}>
@@ -51,7 +50,7 @@ export default function ListItem({ item, openModal }) {
                 </td>
                 <td>{isLoading && <div>Loading Image...</div>}
                     <ClipLoader loading={isLoading}></ClipLoader>
-                    <Image></Image>
+                    <img src={imageURL} width={width} height={height} alt={`Thumbnail for video titled as: ${detail.title}`} onLoad={handleImageLoad} onError={handleImageError} ref={imgRef} style={{ display: "none" }} />
                 </td>
                 <td>{formatDuration(curtime)}</td>
                 <td>{formatDate(detail.publishedAt.slice(0, 10))}</td>
