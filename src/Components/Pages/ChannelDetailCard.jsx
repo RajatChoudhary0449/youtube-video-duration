@@ -1,12 +1,15 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import defaultImage from './../../assets/Images/default.jpg'
+import { ClipLoader } from "react-spinners";
 export default function ChannelDetailCard({ showChannelDetail, setShowChannelDetail, channelDetail }) {
     const [loading, setLoading] = useState(true);
-    const [imageUrl, setImageUrl] = useState(channelDetail?.thumbnails?.high?.url)
+    const [imageUrl, setImageUrl] = useState(channelDetail?.thumbnails?.medium?.url)
+    useEffect(() => {
+        setImageUrl(channelDetail?.thumbnails?.high?.url);
+    }, [channelDetail])
     const imgRef = useRef();
-    const handleOnLoad = (e) => {
+    const handleOnLoad = () => {
         setLoading(false);
-        console.log(e);
         imgRef.current.style.display = "block";
     }
     const handleOnError = () => {
@@ -19,9 +22,14 @@ export default function ChannelDetailCard({ showChannelDetail, setShowChannelDet
             <div className='row'>
                 <h4 className='d-flex justify-content-center'>Channel Detail</h4>
                 {showChannelDetail && <>
-                    <div className='d-flex justify-content-center'>
-                        {loading && <div>Loading Image...</div>}
-                        <img src={imageUrl} ref={imgRef} onLoad={handleOnLoad} onError={handleOnError} style={{ maxWidth: "500px", display: "none" }} width={"80%"} height={"auto"}></img>
+                    <div className='d-flex justify-content-center flex-column'>
+                        {loading && <div className="d-flex justify-content-center">Loading Image...</div>}
+                        <div className="d-flex justify-content-center mb-2">
+                            <ClipLoader loading={loading}></ClipLoader>
+                        </div>
+                        <div className="d-flex justify-content-center">
+                            <img src={imageUrl} ref={imgRef} onLoad={handleOnLoad} onError={handleOnError} style={{ maxWidth: "500px", display: "none" }} width={"80%"} height={"auto"}></img>
+                        </div>
                     </div>
                     <div className="col-md-6 mb-2">
                         <div className="d-flex align-items-center">

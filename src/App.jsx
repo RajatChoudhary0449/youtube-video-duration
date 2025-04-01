@@ -12,6 +12,7 @@ import fetchCategoryDetailFromVideoDetail from './services/fetchCategoryDetailFr
 import Details from './Components/Details';
 import Pagination from './Components/Pagination';
 import { DEFAULTSTART, DEFAULTEND } from './constant/values';
+import { SyncLoader } from 'react-spinners'
 function App() {
   const { setData, time, setTime, curpage, setCurPage, totalPages, setTotalPage, settotalTime, offset, setCategory } = useDataContext();
   const [link, setLink] = useState("")
@@ -139,7 +140,14 @@ function App() {
         <input type="number" step="1" id="end" placeholder="End Index(Optional)" value={end === DEFAULTEND ? '' : end} min={1} onChange={handleEndChange} disabled={fetching} className='abc' />
         <span className='d-flex text-primary justify-content-end' style={{ cursor: "pointer" }} onClick={() => setEnd(DEFAULTEND)}>Clear</span>
 
-        <button id="calculate" type='submit' className={`btn  btn-${fetching ? "secondary" : "success"} py-2 abc`} disabled={fetching}>{fetching ? "Fetching..." : "Get Total Duration"}</button>
+        <button id="calculate" type='submit' className={`btn  btn-${fetching ? "secondary" : "success"} py-2 abc`} disabled={fetching}>
+          {fetching ? "Fetching..." : "Get Total Duration"}
+        </button>
+
+        {fetching && <div className='d-flex justify-content-center'>
+          <SyncLoader loading={fetching} size={8}></SyncLoader>
+        </div>
+        }
         <p>{resultMessage}</p>
         <p>{averageMessage}</p>
 

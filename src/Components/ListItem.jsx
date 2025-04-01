@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import formatDuration from '../utils/formatDuration';
 import defaultimage from '../assets/Images/default.jpg'
 import toastNotification from '../utils/toastNotification';
+import { ClipLoader } from 'react-spinners';
 export default function ListItem({ item, openModal }) {
     const offsetlength = 95;
     const { idx, curtime, detail } = item;
@@ -49,6 +50,7 @@ export default function ListItem({ item, openModal }) {
                     <span className={`${showFull ? "d-none" : "d-inline"} text-primary`} onClick={() => setShowFull(true)} style={{ cursor: 'pointer' }}>Show Complete</span>
                 </td>
                 <td>{isLoading && <div>Loading Image...</div>}
+                    <ClipLoader loading={isLoading}></ClipLoader>
                     <Image></Image>
                 </td>
                 <td>{formatDuration(curtime)}</td>
