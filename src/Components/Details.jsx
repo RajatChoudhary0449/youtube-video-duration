@@ -5,32 +5,36 @@ import PlaylistDetailCard from './Pages/PlaylistDetailCard'
 import ChannelDetailCard from './Pages/ChannelDetailCard'
 import TableDetailCard from './Pages/TableDetailCard'
 import TableComponent from './Pages/TableComponent';
-export default function Details({items}) {
+import useDataContext from '../hooks/useDataContext';
+export default function Details() {
+    const { filteredData: items, data } = useDataContext();
     const [speed, setSpeed] = useState(1);
-    const [channelDetail, setChannelDetail] = useState({});
-    const [firstFetch, setFirstFetch] = useState(false);
+    const [channelDetail, setChannelDetail] = useState([]);
     const [showChannelDetail, setShowChannelDetail] = useState(false);
+    const [show, setShow] = useState(true);
     const handleSelectChange = (e) => {
         setSpeed(Number(e.target.value));
     }
     useEffect(() => {
         const fetchData = async () => {
-            const channelId = items[0].detail.channelId;
-            const [data, success] = await fetchChannelDetail(channelId);
-            setChannelDetail(data);
-            setFirstFetch(success);
+            if (!data.length) return;
+            const channelId = [...new Set(data.map(entry => entry.snippet.channelId))].slice(0, 2);
+            if (channelId.length > 1) {
+                setShow(false);
+                return;
+            }
+            const [response] = await fetchChannelDetail(channelId[0]);
+            setChannelDetail(response);
         }
-        if (showChannelDetail && !firstFetch) {
-            fetchData();
-        }
-    }, [showChannelDetail, firstFetch, items])
+        fetchData();
+    }, [data])
     if (items.length === 0) return <p>No Items to show</p>;
     return (
         <>
             <PlaylistDetailCard handleSelectChange={handleSelectChange} speed={speed} />
-            <ChannelDetailCard showChannelDetail={showChannelDetail} setShowChannelDetail={setShowChannelDetail} channelDetail={channelDetail} />
+            {show && <ChannelDetailCard showChannelDetail={showChannelDetail} setShowChannelDetail={setShowChannelDetail} channelDetail={channelDetail[0]} />}
             <TableDetailCard />
-            <TableComponent items={items} />
+            <TableComponent />
             <div className="d-flex justify-content-center my-2 d-sm-none d-md-none">
                 <span className="fw-bold">Scroll to get more details</span>
             </div>

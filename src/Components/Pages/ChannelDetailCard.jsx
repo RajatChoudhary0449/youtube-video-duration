@@ -28,7 +28,7 @@ export default function ChannelDetailCard({ showChannelDetail, setShowChannelDet
                             <ClipLoader loading={loading}></ClipLoader>
                         </div>
                         <div className="d-flex justify-content-center">
-                            <img src={imageUrl} ref={imgRef} onLoad={handleOnLoad} onError={handleOnError} style={{ maxWidth: "500px", display: "none" }} width={"80%"} height={"auto"}></img>
+                            <img src={imageUrl} ref={imgRef} onLoad={handleOnLoad} onError={handleOnError} style={{ maxWidth: "25rem", display: "none" }} width={"80%"} height={"auto"}></img>
                         </div>
                     </div>
                     <div className="col-md-6 mb-2">

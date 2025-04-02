@@ -14,19 +14,18 @@ import Pagination from './Components/Pagination';
 import { DEFAULTSTART, DEFAULTEND } from './constant/values';
 import { SyncLoader } from 'react-spinners'
 function App() {
-  const { setData, time, setTime, curpage, setCurPage, totalPages, setTotalPage, settotalTime, offset, setCategory } = useDataContext();
+  const { setData, setTime, curpage, setCurPage, totalPages, settotalTime, setCategory, setFilteredData } = useDataContext();
   const [link, setLink] = useState("")
   const [start, setStart] = useState(DEFAULTSTART)
   const [end, setEnd] = useState(DEFAULTEND)
   const [fetching, setFetching] = useState(false);
   const [resultMessage, setResultMessage] = useState("");
   const [averageMessage, setAverageMessage] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
   const [showDetail, setShowDetail] = useState(false);
   const placeholderRef = useRef(0);
   const showButtonRef = useRef(null);
   const array = useMemo(() => [
-    "https://www.youtube.com/playlist?list=UID", 
+    "https://www.youtube.com/playlist?list=UID",
     "https://www.youtube.com/watch?v=UID&list=UID"
   ], []);
   const intervalRef = useRef();
@@ -48,13 +47,6 @@ function App() {
   }, [array.length, link.length, array]);
 
   const inputref = useRef();
-  useEffect(() => {
-    setTotalPage(Math.ceil((time.length) / offset));
-  }, [time, offset, setTotalPage]);
-
-  useEffect(() => {
-    setFilteredData(time.slice((curpage - 1) * offset, curpage * offset));
-  }, [time, curpage, offset]);
 
   const handleformrequest = async (e) => {
     e.preventDefault();
@@ -130,7 +122,7 @@ function App() {
   return (
     <div className="container">
       <h1>YouTube Playlist Duration Calculator</h1>
-      <form onSubmit={handleformrequest}>
+      <form onSubmit={handleformrequest} name="Submit-Form">
         <label htmlFor="link">Enter the link of the YouTube playlist:<i className="fa fa-asterisk text-danger"></i>
         </label>
 
@@ -164,8 +156,8 @@ function App() {
             </div>
             <div className="Details" >
               {showDetail && <>
-                <Details items={filteredData} />
-                <Pagination totalPages={totalPages}></Pagination>
+                <Details />
+                <Pagination totalPages={totalPages} curpage={curpage} setCurPage={setCurPage} ></Pagination>
               </>}
             </div>
           </>

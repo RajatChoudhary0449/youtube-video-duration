@@ -1,6 +1,4 @@
-import useDataContext from "../hooks/useDataContext";
-export default function Pagination({ totalPages }) {
-    const { curpage, setCurPage } = useDataContext();
+export default function Pagination({ curpage, setCurPage, totalPages }) {
     const array = Array.from({ length: totalPages }, (_, i) => i + 1);
     return (
         <div className="d-flex justify-content-center align-items-center mx-3">

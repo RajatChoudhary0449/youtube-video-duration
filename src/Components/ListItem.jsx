@@ -41,25 +41,26 @@ export default function ListItem({ item, openModal }) {
         });
     }
     const ColumnMapping = {
-        "Index": <td key={"Index"}>{idx}</td>,
-        "Title": <td key={"Title"}>{showFull ? (detail.title) : detail.title.slice(0, offsetlength) + "..."}
+        "Index": <td key={"Index"} className='align-content-center text-center'>{idx}</td>,
+        "Title": <td key={"Title"} className='align-content-center text-center'><div>{showFull ? (detail.title) : detail.title.slice(0, offsetlength) + "..."}
             <span className={`${showFull ? "d-none" : "d-inline"} text-primary`} onClick={() => setShowFull(true)} style={{ cursor: 'pointer' }}>Show Complete</span>
+        </div>
         </td>,
-        "Thumbnail": <td key={"Thumbnail"} style={{ cursor: "pointer" }} onClick={() => openModal(detail.id)}>{isLoading && <div>Loading Image...</div>}
+        "Thumbnail": <td key={"Thumbnail"} className='align-content-center' style={{ cursor: "pointer" }} onClick={() => openModal(detail.id)}><div className='d-flex justify-content-center'>{isLoading && <div>Loading Image...</div>}
             <ClipLoader loading={isLoading}></ClipLoader>
-            <img src={imageURL} width={width} height={height} alt={`Thumbnail for video titled as: ${detail.title}`} onLoad={handleImageLoad} onError={handleImageError} ref={imgRef} style={{ display: "none" }} />
+            <img src={imageURL} width={width} height={height} alt={`Thumbnail for video titled as: ${detail.title}`} onLoad={handleImageLoad} onError={handleImageError} ref={imgRef} style={{ display: "none" }} /></div>
         </td>,
-        "Duration": <td key={"Duration"}>{formatDuration(curtime)}</td>,
-        "Published Date": <td key={"Published Date"}>{formatDate(detail.publishedAt.slice(0, 10))}</td>,
-        "Action": <td key={"Action"} onClick={(e) => { e.stopPropagation() }}>
-            <div className='d-flex flex-row justify-content-center'>
+        "Duration": <td key={"Duration"} className='align-content-center text-center'><div>{formatDuration(curtime)}</div></td>,
+        "Published Date": <td key={"Published Date"} className='align-content-center text-center'>{formatDate(detail.publishedAt.slice(0, 10))}</td>,
+        "Action": <td key={"Action"} className='align-content-center text-center' onClick={(e) => { e.stopPropagation() }}>
+            <div className='d-flex flex-row justify-content-center text-center'>
                 <button className='btn border' type='button' title='Preview' onClick={() => openModal(detail.id)}><i className='fas fa-eye'></i></button>
                 <button className='btn border ms-2' type='button' title='Copy' onClick={handleCopy}><i className='fas fa-copy'></i></button>
             </div>
         </td>,
-        "Views": <td key={"Views"}>{item.statistics.viewCount}</td>,
-        "Likes": <td key={"Likes"}>{item.statistics.likeCount}</td>,
-        "Comment Count": <td key={"Comment Count"}>{item.statistics.commentCount}</td>,
+        "Views": <td key={"Views"} className='align-content-center text-center'><div>{item.statistics.viewCount}</div></td>,
+        "Likes": <td key={"Likes"} className='align-content-center text-center'><div>{item.statistics.likeCount}</div></td>,
+        "Comment Count": <td key={"Comment Count"} className='align-content-center text-center'><div>{item.statistics.commentCount}</div></td>,
     }
     return (
         <>

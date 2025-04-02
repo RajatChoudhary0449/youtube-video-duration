@@ -3,7 +3,8 @@ import { createContext, useEffect, useState } from "react"
 const TableContext = createContext();
 
 export const TableContextProvider = ({ children }) => {
-    const [column, setColumn] = useState(["Index", "Title", "Thumbnail", "Duration", "Published Date", "Action"]);
+    const isMobile = window.innerWidth <= 768;
+    const [column, setColumn] = useState(isMobile?["Index","Thumbnail","Duration"]:["Index", "Title", "Thumbnail", "Duration", "Published Date", "Action"]);
     const [totalColumns, setTotalColumns] = useState(["Index", "Title", "Thumbnail", "Duration", "Published Date", "Action", "Views", "Likes", "Comment Count"])
     const [addColumn, setAddColumn] = useState("");
     const [leftColumn, setLeftColumn] = useState(totalColumns.filter(col => !column.includes(col)));
