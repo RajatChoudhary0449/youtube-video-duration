@@ -11,12 +11,12 @@ export default async function getTimeAndDetailsFromData(data, start, end) {
   for (let i = startidx; i <= endidx; i++) {
     let idx = i + 1;
     curtime = parseISO8601Duration(data[idx - 1]?.contentDetails?.duration);
-    const { snippet, id: videoId } = data[idx - 1];
+    const { snippet, id: videoId, statistics } = data[idx - 1];
     for (let j = 0; j < 4; j++) {
       totaltime[j] += curtime[j];
     }
     roundoftime(totaltime);
-    arr.push({ idx: idx, curtime: curtime, totaltime: [...totaltime], detail: { ...snippet, id: videoId }, id: videoId });
+    arr.push({ idx: idx, curtime: curtime, totaltime: [...totaltime], detail: { ...snippet, id: videoId }, id: videoId, statistics: statistics });
   }
   if (arr.length === VIDEOLIMIT) {
     toastNotification(`Maximum video is constrained to ${VIDEOLIMIT}`, "info");

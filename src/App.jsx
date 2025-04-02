@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import divideTheTime from './utils/divideTheTime';
 import formatDuration from './utils/formatDuration';
 import toastNotification from './utils/toastNotification';
@@ -24,13 +24,18 @@ function App() {
   const [filteredData, setFilteredData] = useState([]);
   const [showDetail, setShowDetail] = useState(false);
   const placeholderRef = useRef(0);
-  const array = ["https://www.youtube.com/playlist?list=UID", "https://www.youtube.com/watch?v=UID&list=UID"];
+  const showButtonRef = useRef(null);
+  const array = useMemo(() => [
+    "https://www.youtube.com/playlist?list=UID", 
+    "https://www.youtube.com/watch?v=UID&list=UID"
+  ], []);
   const intervalRef = useRef();
+
   useEffect(() => {
     if (!link.length) {
       intervalRef.current = setInterval(() => {
         placeholderRef.current = (placeholderRef.current + 1) % array.length;
-        inputref.current.placeholder=array[placeholderRef.current];
+        inputref.current.placeholder = array[placeholderRef.current];
       }, 2000);
     }
     else {
@@ -40,7 +45,7 @@ function App() {
       }
     }
     return () => { if (intervalRef.current) clearInterval(intervalRef.current) };
-  }, [array.length, link.length,array]);
+  }, [array.length, link.length, array]);
 
   const inputref = useRef();
   useEffect(() => {
@@ -155,7 +160,7 @@ function App() {
         {!fetching &&
           <>
             <div className="Link-header">
-              <a href="/" className="App-link my-2" onClick={(e) => { e.preventDefault(); setShowDetail(!showDetail) }}>{showDetail ? "hide" : "show"} details</a>
+              <button className='App-link my-2 border-0' ref={showButtonRef} type={"button"} onClick={() => setShowDetail(!showDetail)}>{showDetail ? "hide" : "show"} details</button>
             </div>
             <div className="Details" >
               {showDetail && <>

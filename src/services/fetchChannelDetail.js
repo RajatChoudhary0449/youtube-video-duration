@@ -1,3 +1,5 @@
+import toastNotification from "../utils/toastNotification";
+
 export default async function fetchChannelDetail(channelId) {
     const apiKey = import.meta.env.VITE_APP_API_KEY;
     try {
@@ -8,7 +10,7 @@ export default async function fetchChannelDetail(channelId) {
         return [newobj, true];
     }
     catch (error) {
-        console.log(error);
+        toastNotification(error, "error");
         return [{}, false];
     }
 }
