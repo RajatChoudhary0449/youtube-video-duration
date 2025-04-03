@@ -10,25 +10,15 @@ export default function TableComponent() {
     const [videoId, setVideoId] = useState(null);
     const { column, setColumn, totalColumns, leftColumn, addColumn, setAddColumn } = useTableContext();
     const { filteredData: items, time, setTime } = useDataContext();
-    const [sortState, setSortState] = useState(Array.from({ length: column.length }, () => ""));
-    // const [multipleSort, setMultipleSort] = useState(false);
-    const [dragStart,setDragStart]=useState("");
-
+    const [sortState, setSortState] = useState(column.reduce((acc, cur) => ({ ...acc, [cur]: "" }), {}));
+    const [dragStart, setDragStart] = useState("");
     const openModal = (videoId) => {
         setModalOpen(true);
         setVideoId(videoId);
     };
 
     useEffect(() => {
-        setSortState(prev => {
-            if (prev.length > column.length) return prev.slice(0, column.length);
-            else {
-                const len = prev.length;
-                prev.length = column.length;
-                prev.fill("", len, column.length);
-                return prev;
-            }
-        })
+        setSortState(column.reduce((acc, cur) => ({ ...acc, [cur]: "" }), {}));
     }, [column.length]);
 
     const closeModal = () => {
@@ -81,23 +71,24 @@ export default function TableComponent() {
         return [...time].sort(callback);
     }
 
-    const handleSortChange = (index) => {
-        if (column[index] === "Thumbnail" || column[index] === "Action") {
-            toastNotification(`Sorry, Can't implement sorting based upon ${column[index]}`, "info");
+    const handleSortChange = (item) => {
+        if (item === "Thumbnail" || item === "Action") {
+            toastNotification(`Sorry, Can't implement sorting based upon ${item}`, "info");
             return;
         }
-        let curSortState = [...sortState].map((item, idx) => idx === index ? item : "");
-        if (curSortState[index] === "") curSortState[index] = "asc";
-        else if (curSortState[index] === "asc") curSortState[index] = "desc";
-        else curSortState[index] = "";
+        let curSortState = column.reduce((acc, cur) => ({ ...acc, [cur]: "" }), {});
+        curSortState[item] = sortState[item];
+        if (curSortState[item] === "") curSortState[item] = "asc";
+        else if (curSortState[item] === "asc") curSortState[item] = "desc";
+        else curSortState[item] = "";
         setSortState(curSortState);
         let newList;
-        if (curSortState[index] === "") {
+        if (curSortState[item] === "") {
             setTime([...time].sort((a, b) => a.idx - b.idx));
             return;
         }
-        const asc = curSortState[index] === "asc";
-        switch (column[index]) {
+        const asc = curSortState[item] === "asc";
+        switch (item) {
             case 'Index': newList = (asc ? helperSortFunction((a, b) => a.idx - b.idx) : helperSortFunction((b, a) => a.idx - b.idx)); break;
             case 'Title': newList = (asc ? helperSortFunction((a, b) => a.detail.title.localeCompare(b.detail.title)) : helperSortFunction((b, a) => a.detail.title.localeCompare(b.detail.title))); break;
             case 'Duration': newList = (asc ? helperSortFunction((a, b) => a.curtime[0] - b.curtime[0] || a.curtime[1] - b.curtime[1] || a.curtime[2] - b.curtime[2] || a.curtime[3] - b.curtime[3]) : helperSortFunction((b, a) => a.curtime[0] - b.curtime[0] || a.curtime[1] - b.curtime[1] || a.curtime[2] - b.curtime[2] || a.curtime[3] - b.curtime[3])); break;
@@ -110,21 +101,21 @@ export default function TableComponent() {
         setTime(newList);
     }
 
-    const handleDragStart=(e)=>{
+
+    const handleDragStart = (e) => {
         setDragStart(e.target.id);
     }
-    const handleDragEnter=(e)=>{
-        if(e.target.id===dragStart) return;
-        const from=column.indexOf(dragStart);
-        const to=column.indexOf(e.target.id);
-        if(to===-1)
-        {
+    const handleDragEnter = (e) => {
+        if (e.target.id === dragStart) return;
+        const from = column.indexOf(dragStart);
+        const to = column.indexOf(e.target.id);
+        if (to === -1) {
             return;
         }
-        const newCol=[...column];
-        const temp=newCol[from];
-        newCol[from]=newCol[to];
-        newCol[to]=temp;
+        const newCol = [...column];
+        const temp = newCol[from];
+        newCol[from] = newCol[to];
+        newCol[to] = temp;
         setColumn(newCol);
     }
     return (
@@ -140,7 +131,7 @@ export default function TableComponent() {
                                     {totalColumns.map((col, idx) => <option value={col} className='fw-bold' key={idx}>{col}</option>)}
                                 </select>
                                 <div className='d-flex flex-row'>
-                                    <button className='btn' type={"button"} onClick={() => handleSortChange(index)}><i className={`fas fa-sort${sortState[index] === "asc" ? ("-up") : (sortState[index] === "desc" ? "-down" : "")}`}></i></button>
+                                    <button className='btn' type={"button"} onClick={() => handleSortChange(item)}><i className={`fas fa-sort${sortState[item] === "asc" ? ("-up") : (sortState[item] === "desc" ? "-down" : "")}`}></i></button>
                                     <button className='btn btn-danger ms-1 h-25 p-2 d-flex justify-content-end' type="button" onClick={() => handleDelete(item)}><i className='fas fa-trash'></i></button>
                                 </div>
                             </div>
