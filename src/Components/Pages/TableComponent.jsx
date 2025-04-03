@@ -12,6 +12,8 @@ export default function TableComponent() {
     const { filteredData: items, time, setTime } = useDataContext();
     const [sortState, setSortState] = useState(Array.from({ length: column.length }, () => ""));
     // const [multipleSort, setMultipleSort] = useState(false);
+    const [dragStart,setDragStart]=useState("");
+
     const openModal = (videoId) => {
         setModalOpen(true);
         setVideoId(videoId);
@@ -107,6 +109,24 @@ export default function TableComponent() {
         }
         setTime(newList);
     }
+
+    const handleDragStart=(e)=>{
+        setDragStart(e.target.id);
+    }
+    const handleDragEnter=(e)=>{
+        if(e.target.id===dragStart) return;
+        const from=column.indexOf(dragStart);
+        const to=column.indexOf(e.target.id);
+        if(to===-1)
+        {
+            return;
+        }
+        const newCol=[...column];
+        const temp=newCol[from];
+        newCol[from]=newCol[to];
+        newCol[to]=temp;
+        setColumn(newCol);
+    }
     return (
         <div className='table-responsive'>
             <ModalWindow modalOpen={modalOpen} closeModal={closeModal} handleOutsideClick={handleOutsideClick} videoId={videoId} />
@@ -114,7 +134,7 @@ export default function TableComponent() {
             <table className='table'>
                 <thead>
                     <tr>
-                        {column.map((item, index) => <th className={"border"} style={{ backgroundColor: "#f4f4f4" }} key={index}>
+                        {column.map((item, index) => <th className={"border"} id={item} draggable onDragStart={handleDragStart} onDragEnter={handleDragEnter} style={{ backgroundColor: "#f4f4f4" }} key={index}>
                             <div className={`d-flex flex-${isMobile ? "column" : "row"} align-items-center`}>
                                 <select value={item} className={`fw-bold p-2 w-${isMobile ? "100" : "auto"} border-0`} onChange={(e) => handleColumnNameChange(e, index)}>
                                     {totalColumns.map((col, idx) => <option value={col} className='fw-bold' key={idx}>{col}</option>)}
