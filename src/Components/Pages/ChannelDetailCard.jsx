@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import defaultImage from './../../assets/Images/default.jpg'
 import { ClipLoader } from "react-spinners";
+import './../../App.css'
 export default function ChannelDetailCard({ showChannelDetail, setShowChannelDetail, channelDetail }) {
     const [loading, setLoading] = useState(true);
     const [imageUrl, setImageUrl] = useState(channelDetail?.thumbnails?.medium?.url)
@@ -59,7 +60,7 @@ export default function ChannelDetailCard({ showChannelDetail, setShowChannelDet
 
                 }
                 <div className='d-flex justify-content-end'>
-                    <button className='btn w-auto fw-bold text-success' type="button" onClick={() => setShowChannelDetail(!showChannelDetail)}>{showChannelDetail ? "Hide " : "Show "} Detail</button>
+                    <button className='App-link w-auto border-0 ' type="button" onClick={() => setShowChannelDetail(!showChannelDetail)}>{showChannelDetail ? "Hide " : "Show "} Detail</button>
                 </div>
             </div>
         </div>

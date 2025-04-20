@@ -152,7 +152,7 @@ function App() {
         {!fetching &&
           <>
             <div className="Link-header">
-              <button className='App-link my-2 border-0' ref={showButtonRef} type={"button"} onClick={() => setShowDetail(!showDetail)}>{showDetail ? "hide" : "show"} details</button>
+              <button className='App-link my-2 border-0' ref={showButtonRef} type={"button"} onClick={() => setShowDetail(!showDetail)}>{showDetail ? "Hide" : "Show"} details</button>
             </div>
             <div className="Details" >
               {showDetail && <>
