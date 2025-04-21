@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import { DEFAULTOFFSETS } from "../constant/values";
 
 const DataContext = createContext(null);
 
@@ -12,7 +13,7 @@ export const DataContextProvider = ({ children }) => {
     const [totalPages, setTotalPage] = useState(0);
 
     const [totalTime, settotalTime] = useState([0, 0, 0, 0]);
-    const [offset, setOffset] = useState(isMobile ? 5 : 10);
+    const [offset, setOffset] = useState(DEFAULTOFFSETS);
 
     const [category, setCategory] = useState("");
 

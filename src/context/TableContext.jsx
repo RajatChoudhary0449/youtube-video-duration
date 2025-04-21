@@ -1,11 +1,11 @@
 import { createContext, useEffect, useState } from "react"
+import { ALLCOLS, DEFAULTCOLS } from "../constant/values";
 
 const TableContext = createContext();
 
 export const TableContextProvider = ({ children }) => {
-    const isMobile = window.innerWidth <= 768;
-    const [column, setColumn] = useState(isMobile?["Index","Thumbnail","Duration"]:["Index", "Title", "Thumbnail", "Duration", "Published Date", "Action"]);
-    const [totalColumns, setTotalColumns] = useState(["Index", "Title", "Thumbnail", "Duration", "Published Date", "Action", "Views", "Likes", "Comment Count"])
+    const [column, setColumn] = useState(DEFAULTCOLS);
+    const [totalColumns, setTotalColumns] = useState(ALLCOLS)
     const [addColumn, setAddColumn] = useState("");
     const [leftColumn, setLeftColumn] = useState(totalColumns.filter(col => !column.includes(col)));
     useEffect(() => {
