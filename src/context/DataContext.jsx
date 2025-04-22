@@ -4,7 +4,6 @@ import { DEFAULTOFFSETS } from "../constant/values";
 const DataContext = createContext(null);
 
 export const DataContextProvider = ({ children }) => {
-    const isMobile = window.innerWidth <= 768;
     const [data, setData] = useState([]);
     const [time, setTime] = useState([]);
     const [filteredData, setFilteredData] = useState([]);

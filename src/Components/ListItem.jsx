@@ -4,8 +4,8 @@ import defaultimage from '../assets/Images/default.jpg'
 import toastNotification from '../utils/toastNotification';
 import { ClipLoader } from 'react-spinners';
 import useTableContext from '../hooks/useTableContext';
+import { isMobile } from '../constant/values';
 export default function ListItem({ item, openModal }) {
-    const isMobile = window.innerWidth <= 768;
     const offsetlength = isMobile ? 30 : 95;
     const { idx, curtime, detail } = item;
     let { url, width, height } = detail.thumbnails.default;

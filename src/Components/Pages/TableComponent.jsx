@@ -4,10 +4,9 @@ import ModalWindow from "./ModalWindow";
 import useTableContext from "../../hooks/useTableContext";
 import useDataContext from "../../hooks/useDataContext";
 import toastNotification from "../../utils/toastNotification";
-import { DEFAULTCOLS, DEFAULTOFFSETS } from "../../constant/values";
+import { DEFAULTCOLS, DEFAULTOFFSETS, isMobile } from "../../constant/values";
 export default function TableComponent() {
     const [modalOpen, setModalOpen] = useState(false);
-    const isMobile = window.innerWidth <= 768;
     const [videoId, setVideoId] = useState(null);
     const {
         column,
@@ -15,7 +14,7 @@ export default function TableComponent() {
         totalColumns,
         leftColumn,
     } = useTableContext();
-    const { filteredData: items, time, setTime,setOffset} = useDataContext();
+    const { filteredData: items, time, setTime, setOffset } = useDataContext();
     const [sortState, setSortState] = useState(
         column.reduce((acc, cur) => ({ ...acc, [cur]: "" }), {})
     );
@@ -184,8 +183,7 @@ export default function TableComponent() {
     };
 
     const handleResetClick = (e) => {
-        if(window.confirm("Are you sure you want to reset the columns and the number of entities?"))
-        {
+        if (window.confirm("Are you sure you want to reset the columns and the number of entities?")) {
             setColumn(DEFAULTCOLS);
             setOffset(DEFAULTOFFSETS);
         }
@@ -211,103 +209,111 @@ export default function TableComponent() {
     return (
         <>
             <div className="d-flex justify-content-end align-items-end mt-4">
-                <button className="btn btn-primary" type="button" onClick={handleResetClick}>Reset Table</button>
+                <button className="btn btn-secondary" type="button" title="Reset Table" onClick={handleResetClick}><i className="fas fa-arrow-rotate-left"></i></button>
             </div>
-            <div className="table-responsive d-flex" >
+            {leftColumn.length > 0 &&
+                <div className="d-flex pb-2 flex-column">
+                    <div className="d-flex justify-content-end">
+                    <button
+                        className="btn d-flex justify-content-end btn-success text-white gap-1 ms-2 mt-4" style={{ height: "40px" }}
+                        type="button"
+                        title="Add Columns"
+                        onClick={(e) => {
+                            setOpenAddModal(!openAddModal);
+                            e.stopPropagation();
+                        }}
+                    >
+                        <i
+                            className="fas fa-plus pe-1 py-1"
+                            style={{ borderRight: "1px solid black" }}
+                        ></i>
+                        <i className={`fas p-1 fa-caret-${openAddModal ? "up" : "down"}`}></i>
+                    </button>
+                    </div>
+                    {openAddModal &&
+                        <div className="d-flex justify-content-end">
+                            <ul className={`list-unstyled ps-2 justify-content-end text-end w-${isMobile?"100":"50"}`}>{leftColumn.map((item, index) => (<li className="p-1 form-control" key={index} style={{ cursor: "pointer" }} onClick={() => {handleAdd(item); toastNotification(`${item} is successfully added`)}}>{item}</li>))}</ul>
+                        </div>
+                    }
+                </div>
+            }
                 <ModalWindow
                     modalOpen={modalOpen}
                     closeModal={closeModal}
                     handleOutsideClick={handleOutsideClick}
                     videoId={videoId}
                 />
-                    {column.length===0&&<p>No rows available to display. Add some to begin</p>}
-                <table className="table" onClick={() => setOpenAddModal(false)}>
-                    <thead>
-                        <tr>
-                            {column.map((item, index) => (
-                                <th
-                                    className={"border"}
-                                    id={item}
-                                    draggable
-                                    onDragStart={handleDragStart}
-                                    onDragEnter={handleDragEnter}
-                                    style={{ backgroundColor: "#f4f4f4" }}
-                                    key={index}
-                                >
-                                    <div
-                                        className={`d-flex flex-${isMobile ? "column" : "row"
-                                            } align-items-center justify-content-center`}
+                {column.length === 0 && <p>
+                    No Columns available to display. Add some to begin
+
+                    </p>}
+                <div className="table-wrapper" style={{ position: "relative", maxHeight: "100vh", overflow: "auto" }}>
+                    <table className="table" onClick={() => setOpenAddModal(false)}>
+                        <thead className="position-sticky top-0">
+                            <tr>
+                                {column.map((item, index) => (
+                                    <th
+                                        className={"border"}
+                                        id={item}
+                                        draggable
+                                        onDragStart={handleDragStart}
+                                        onDragEnter={handleDragEnter}
+                                        style={{ backgroundColor: "#f4f4f4" }}
+                                        key={index}
                                     >
-                                        <select
-                                            value={item}
-                                            className={`fw-bold bg-white p-2 w-${isMobile ? "100" : "auto"
-                                                } border-0`}
-                                            onChange={(e) => handleColumnNameChange(e, index)}
+                                        <div
+                                            className={`d-flex flex-${isMobile ? "column" : "row"
+                                                } align-items-center justify-content-center`}
                                         >
-                                            {totalColumns.map((col, idx) => (
-                                                <option value={col} className="fw-bold" key={idx}>
-                                                    {col}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <div className="d-flex flex-row">
-                                            <button
-                                                className="btn"
-                                                type={"button"}
-                                                onClick={() => handleSortChange(item)}
+                                            <select
+                                                value={item}
+                                                className={`fw-bold bg-white p-2 w-${isMobile ? "100" : "auto"
+                                                    } border-0`}
+                                                onChange={(e) => handleColumnNameChange(e, index)}
                                             >
-                                                <i
-                                                    className={`fas fa-sort${sortState[item] === "asc"
-                                                        ? "-up"
-                                                        : sortState[item] === "desc"
-                                                            ? "-down"
-                                                            : ""
-                                                        }`}
-                                                ></i>
-                                            </button>
-                                            <button
-                                                className="btn btn-danger ms-1 h-25 p-2 d-flex justify-content-end"
-                                                type="button"
-                                                onClick={() => handleDelete(item)}
-                                            >
-                                                <i className="fas fa-trash"></i>
-                                            </button>
+                                                {totalColumns.map((col, idx) => (
+                                                    <option value={col} className="fw-bold" key={idx}>
+                                                        {col}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <div className="d-flex flex-row">
+                                                <button
+                                                    className="btn"
+                                                    type={"button"}
+                                                    onClick={() => handleSortChange(item)}
+                                                >
+                                                    <i
+                                                        className={`fas fa-sort${sortState[item] === "asc"
+                                                            ? "-up"
+                                                            : sortState[item] === "desc"
+                                                                ? "-down"
+                                                                : ""
+                                                            }`}
+                                                    ></i>
+                                                </button>
+                                                <button
+                                                    className="btn btn-danger ms-1 h-25 p-2 d-flex justify-content-end"
+                                                    type="button"
+                                                    onClick={() => handleDelete(item)}
+                                                >
+                                                    <i className="fas fa-trash"></i>
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {items.map((item) => {
-                            return (
-                                <ListItem key={item["idx"]} openModal={openModal} item={item} />
-                            );
-                        })}
-                    </tbody>
-                </table>
-                {leftColumn.length>0 &&
-                    <div>
-                        <button
-                            className="btn d-flex btn-success text-white gap-1 ms-2 mt-4" style={{ height: "40px" }}
-                            type="button"
-                            onClick={(e) => {
-                                setOpenAddModal(!openAddModal);
-                                e.stopPropagation();
-                            }}
-                        >
-                            <i
-                                className="fas fa-plus pe-1 py-1"
-                                style={{ borderRight: "1px solid black" }}
-                            ></i>
-                            <i className={`fas p-1 fa-caret-${openAddModal ? "up" : "down"}`}></i>
-                        </button>
-                        {openAddModal &&
-                            <ul className="list-unstyled ps-2">{leftColumn.map((item, index) => (<li className="p-1 form-control" key={index} style={{ cursor: "pointer" }} onClick={() => handleAdd(item)}>{item}</li>))}</ul>
-                        }
-                    </div>
-                }
-            </div>
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {items.map((item) => {
+                                return (
+                                    <ListItem key={item["idx"]} openModal={openModal} item={item} />
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
         </>
     );
 }

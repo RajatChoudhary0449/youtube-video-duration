@@ -2,9 +2,9 @@ import { useState } from "react";
 import useDataContext from "../../hooks/useDataContext"
 import useTableContext from "../../hooks/useTableContext";
 import toastNotification from "./../../utils/toastNotification";
+import { isMobile } from "../../constant/values";
 export default function TableDetailCard() {
     const { totalPages, offset, setOffset, setCurPage } = useDataContext()
-    const isMobile = window.innerWidth <= 768;
     const { column, setColumn,addColumn,setAddColumn,leftColumn } = useTableContext();
     const [from, setFrom] = useState(column[0]);
     const [to, setTo] = useState(column[0]);
@@ -49,7 +49,7 @@ export default function TableDetailCard() {
                         setCurPage(1);
                     }} />
                 </div>
-                <div className={`col-md-6 d-flex align-items-center flex-${isMobile ? "column" : "row"}`}>
+                {/* <div className={`col-md-6 d-flex align-items-center flex-${isMobile ? "column" : "row"}`}>
                     <h5 className="card-title">Swap Columns</h5>
                     <div className="form-group mb-3 mx-2">
                         <label htmlFor="from">From:</label>
@@ -109,7 +109,7 @@ export default function TableDetailCard() {
                             Add
                         </button>
                     </div>
-                </div>
+                </div> */}
             </div>
         </div >
     )

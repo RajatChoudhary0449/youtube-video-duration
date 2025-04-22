@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
+import { isMobile } from '../constant/values';
 
 const toastNotification = (message, type = 'success') => {
-    const isMobile = window.innerWidth <= 768;
     toast(message, {
         type: type,
         position: 'top-right',
