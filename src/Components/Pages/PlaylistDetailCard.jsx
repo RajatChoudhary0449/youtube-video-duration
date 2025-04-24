@@ -10,7 +10,7 @@ export default function PlaylistDetailCard({ handleSelectChange, speed }) {
                     <h4>Trimmed Playlist Detail</h4>
                 </div>
                 <div className="col-md-6 mb-2">
-                    <div className="d-flex align-items-center">
+                    <div className="d-flex align-items-center justify-content-between">
                         <h4 className="me-2">Speed:</h4>
                         <select name="speed" onChange={handleSelectChange} className="form-select w-auto">
                             <option value={1}>*1</option>
@@ -25,21 +25,21 @@ export default function PlaylistDetailCard({ handleSelectChange, speed }) {
                 </div>
 
                 <div className="col-md-6 mb-2">
-                    <div className="d-flex align-items-center">
+                    <div className="d-flex align-items-center justify-content-between">
                         <h4 className="me-2">Result:</h4>
                         <p className="mb-1">{formatDuration(divideTheTime(totalTime, speed))}</p>
                     </div>
                 </div>
 
                 <div className="col-md-6 mb-2">
-                    <div className="d-flex align-items-center">
+                    <div className="d-flex align-items-center justify-content-between">
                         <h4 className="me-2">Total Videos:</h4>
                         <p className="mb-1">{time.length}</p>
                     </div>
                 </div>
 
                 <div className="col-md-6 mb-2">
-                    <div className="d-flex align-items-center">
+                    <div className="d-flex align-items-center justify-content-between">
                         <h4 className="me-2">Category:</h4>
                         <p className="mb-1">{category}</p>
                     </div>

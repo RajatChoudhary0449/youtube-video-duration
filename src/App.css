@@ -82,3 +82,19 @@ p {
   background-color: #218838;
   color: white;
 }
+
+label{
+  font-weight: bold;
+}
+.container form{
+  padding: 0px 20px;
+}
+@media (max-width:425px)
+{
+  .container{
+    margin-top: 0.02rem;
+  }
+  .container form{
+    padding:0px 0px;
+  }
+}

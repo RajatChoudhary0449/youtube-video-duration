@@ -33,25 +33,25 @@ export default function ChannelDetailCard({ showChannelDetail, setShowChannelDet
                         </div>
                     </div>
                     <div className="col-md-6 mb-2">
-                        <div className="d-flex align-items-center">
+                        <div className="d-flex align-items-center justify-content-between">
                             <h4 className="me-2">Name:</h4>
                             <p className="mb-1">{channelDetail.title}</p>
                         </div>
                     </div>
                     <div className="col-md-6 mb-2">
-                        <div className="d-flex align-items-center">
+                        <div className="d-flex align-items-center justify-content-between">
                             <h4 className="me-2">Visit:</h4>
                             <span className='text-primary mb-1' type='button' onClick={() => window.open(`https://www.youtube.com/${channelDetail.customUrl}`, "_blank")}>{channelDetail.customUrl}</span>
                         </div>
                     </div>
                     <div className="col-md-6 mb-2">
-                        <div className="d-flex align-items-center">
+                        <div className="d-flex align-items-center justify-content-between">
                             <h4 className="me-2">Videos:</h4>
                             <p className="mb-1">{channelDetail.videoCount}</p>
                         </div>
                     </div>
                     <div className="col-md-6 mb-2">
-                        <div className="d-flex align-items-center">
+                        <div className="d-flex align-items-center justify-content-between">
                             <h4 className="me-2">Subscribers:</h4>
                             <p className="mb-1">{channelDetail.subscriberCount}</p>
                         </div>
