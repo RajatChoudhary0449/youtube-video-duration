@@ -210,10 +210,8 @@ export default function TableComponent() {
         <>
             <div className="d-flex justify-content-end align-items-end mt-4">
                 <button className="btn btn-secondary" type="button" title="Reset Table" onClick={handleResetClick}><i className="fas fa-arrow-rotate-left"></i></button>
-            </div>
-            {leftColumn.length > 0 &&
-                <div className="d-flex pb-2 flex-column">
-                    <div className="d-flex justify-content-end">
+                {
+                    leftColumn.length>0 && 
                     <button
                         className="btn d-flex justify-content-end btn-success text-white gap-1 ms-2 mt-4" style={{ height: "40px" }}
                         type="button"
@@ -229,10 +227,14 @@ export default function TableComponent() {
                         ></i>
                         <i className={`fas p-1 fa-caret-${openAddModal ? "up" : "down"}`}></i>
                     </button>
-                    </div>
+                }
+                
+            </div>
+            {leftColumn.length > 0 &&
+                <div className="d-flex pb-2 flex-column">
                     {openAddModal &&
                         <div className="d-flex justify-content-end">
-                            <ul className={`list-unstyled ps-2 justify-content-end text-end w-${isMobile?"100":"50"}`}>{leftColumn.map((item, index) => (<li className="p-1 form-control" key={index} style={{ cursor: "pointer" }} onClick={() => {handleAdd(item); toastNotification(`${item} is successfully added`)}}>{item}</li>))}</ul>
+                            <ul className={`list-unstyled ps-2 justify-content-end text-end w-${isMobile?"100":"50"}`}>{leftColumn.map((item, index) => (<li className="p-1 px-3 form-control" key={index} style={{ cursor: "pointer" }} onClick={() => {handleAdd(item); toastNotification(`${item} is successfully added`)}}>{item}</li>))}</ul>
                         </div>
                     }
                 </div>

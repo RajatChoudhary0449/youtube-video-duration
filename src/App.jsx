@@ -13,6 +13,7 @@ import Details from './Components/Details';
 import Pagination from './Components/Pagination';
 import { DEFAULTSTART, DEFAULTEND } from './constant/values';
 import { SyncLoader } from 'react-spinners'
+import TableComponent from './Components/Pages/TableComponent';
 function App() {
   const { setData, setTime, curpage, setCurPage, totalPages, settotalTime, setCategory, setFilteredData } = useDataContext();
   const [link, setLink] = useState("")
@@ -47,7 +48,6 @@ function App() {
   }, [array.length, link.length, array]);
 
   const inputref = useRef();
-
   const handleformrequest = async (e) => {
     e.preventDefault();
     setData([]);
@@ -103,7 +103,6 @@ function App() {
     setFetching(false);
     toastNotification("Fetched Successfully", "success");
   }
-
   const handleStartChange = (e) => {
     if (e.target.value === "") setStart(DEFAULTSTART);
     else setStart(Math.max(Math.floor(Number(e.target.value)), 1))
@@ -118,52 +117,61 @@ function App() {
     setLink(cur);
     setCurPage(1);
   }
-
   return (
-    <div className="container">
-      <h1>YouTube Playlist Duration Calculator</h1>
-      <form onSubmit={handleformrequest} name="Submit-Form">
-        <label htmlFor="link">Enter the link of the YouTube playlist:<i className="fa fa-asterisk text-danger"></i>
-        </label>
+    <>
+      <div className="container" style={{ maxWidth: "850px", boxShadow: "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset" }}>
+        <h1>YouTube Playlist Duration Calculator</h1>
+        <form onSubmit={handleformrequest} name="Submit-Form">
+          <label htmlFor="link">Link of the YouTube playlist:<i className="fa fa-asterisk text-danger"></i>
+          </label>
 
-        <input type="text" id="link" ref={inputref} placeholder={array[placeholderRef.current]} disabled={fetching} autoFocus value={link} onChange={(e) => { handlechangelink(e); }} className='abc' />
+          <input type="text" id="link" ref={inputref} placeholder={array[placeholderRef.current]} disabled={fetching} autoFocus value={link} onChange={(e) => { handlechangelink(e); }} className='abc' />
 
-        <span className='d-flex text-primary justify-content-end' style={{ cursor: "pointer" }} onClick={() => setLink("")}>Clear</span>
+          <span className='d-flex text-primary justify-content-end' style={{ cursor: "pointer" }} onClick={() => setLink("")}>Clear</span>
 
-        <label htmlFor="start">Starting Video Index (1-based):</label>
-        <input type="number" id="start" placeholder="Start Index(Optional)" value={(start === DEFAULTSTART) ? '' : start} onChange={handleStartChange} min={1} step={1} disabled={fetching} className='abc' />
-        <span className='d-flex text-primary justify-content-end' style={{ cursor: "pointer" }} onClick={() => setStart(DEFAULTSTART)}>Clear</span>
+          <label htmlFor="start">Starting Video Index (1-based):</label>
+          <input type="number" id="start" placeholder="Start Index(Optional)" value={(start === DEFAULTSTART) ? '' : start} onChange={handleStartChange} min={1} step={1} disabled={fetching} className='abc' />
+          <span className='d-flex text-primary justify-content-end' style={{ cursor: "pointer" }} onClick={() => setStart(DEFAULTSTART)}>Clear</span>
 
-        <label htmlFor="end">Ending Video Index (1-based):</label>
-        <input type="number" step="1" id="end" placeholder="End Index(Optional)" value={end === DEFAULTEND ? '' : end} min={1} onChange={handleEndChange} disabled={fetching} className='abc' />
-        <span className='d-flex text-primary justify-content-end' style={{ cursor: "pointer" }} onClick={() => setEnd(DEFAULTEND)}>Clear</span>
+          <label htmlFor="end">Ending Video Index (1-based):</label>
+          <input type="number" step="1" id="end" placeholder="End Index(Optional)" value={end === DEFAULTEND ? '' : end} min={1} onChange={handleEndChange} disabled={fetching} className='abc' />
+          <span className='d-flex text-primary justify-content-end' style={{ cursor: "pointer" }} onClick={() => setEnd(DEFAULTEND)}>Clear</span>
 
-        <button id="calculate" type='submit' className={`btn  btn-${fetching ? "secondary" : "success"} py-2 abc`} disabled={fetching}>
-          {fetching ? "Fetching..." : "Get Total Duration"}
-        </button>
+          <button id="calculate" type='submit' className={`btn  btn-${fetching ? "secondary" : "success"} py-2 abc`} disabled={fetching}>
+            {fetching ? "Fetching..." : "Get Total Duration"}
+          </button>
 
-        {fetching && <div className='d-flex justify-content-center'>
-          <SyncLoader loading={fetching} size={8}></SyncLoader>
+          {fetching && <div className='d-flex justify-content-center'>
+            <SyncLoader loading={fetching} size={8}></SyncLoader>
+          </div>
+          }
+          <p>{resultMessage}</p>
+          <p>{averageMessage}</p>
+
+          {!fetching &&
+            <>
+              <div className="Link-header">
+                <button className='App-link my-2 border-0' ref={showButtonRef} type={"button"} onClick={() => setShowDetail(!showDetail)}>{showDetail ? "Hide" : "Show"} details</button>
+              </div>
+              <div className="Details" >
+                {showDetail && <>
+                  <Details />
+                </>}
+              </div>
+            </>
+          }
+        </form >
+      </div >
+      {showDetail &&
+        <div className='container mt-4'>
+          <TableComponent />
+          <div className="d-flex justify-content-center my-2 d-sm-none d-md-none">
+            <span className="fw-bold">Scroll to get more details</span>
+          </div>
+          <Pagination totalPages={totalPages} curpage={curpage} setCurPage={setCurPage} />
         </div>
-        }
-        <p>{resultMessage}</p>
-        <p>{averageMessage}</p>
-
-        {!fetching &&
-          <>
-            <div className="Link-header">
-              <button className='App-link my-2 border-0' ref={showButtonRef} type={"button"} onClick={() => setShowDetail(!showDetail)}>{showDetail ? "Hide" : "Show"} details</button>
-            </div>
-            <div className="Details" >
-              {showDetail && <>
-                <Details />
-                <Pagination totalPages={totalPages} curpage={curpage} setCurPage={setCurPage} ></Pagination>
-              </>}
-            </div>
-          </>
-        }
-      </form >
-    </div >
+      }
+    </>
   );
 }
 

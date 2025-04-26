@@ -1,50 +1,51 @@
 import useDataContext from "../../hooks/useDataContext"
 import formatDuration from '../../utils/formatDuration';
 import divideTheTime from '../../utils/divideTheTime';
+import { useState } from "react";
 export default function PlaylistDetailCard({ handleSelectChange, speed }) {
     const { category, totalTime, time } = useDataContext();
+    const [showPlaylistDetail,setShowPlaylistDetail]=useState(false);
     return (
-        <div className="card p-3">
-            <div className="row">
-                <div className='d-flex justify-content-center my-2'>
-                    <h4>Trimmed Playlist Detail</h4>
-                </div>
-                <div className="col-md-6 mb-2">
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h4 className="me-2">Speed:</h4>
-                        <select name="speed" onChange={handleSelectChange} className="form-select w-auto">
-                            <option value={1}>*1</option>
-                            <option value={1.25}>*1.25</option>
-                            <option value={1.5}>*1.5</option>
-                            <option value={1.75}>*1.75</option>
-                            <option value={2}>*2</option>
-                            <option value={3}>*3</option>
-                            <option value={5}>*5</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div className="col-md-6 mb-2">
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h4 className="me-2">Result:</h4>
-                        <p className="mb-1">{formatDuration(divideTheTime(totalTime, speed))}</p>
-                    </div>
-                </div>
-
-                <div className="col-md-6 mb-2">
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h4 className="me-2">Total Videos:</h4>
-                        <p className="mb-1">{time.length}</p>
-                    </div>
-                </div>
-
-                <div className="col-md-6 mb-2">
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h4 className="me-2">Category:</h4>
-                        <p className="mb-1">{category}</p>
-                    </div>
-                </div>
+        <div className='container mb-2'>
+            <div className="d-flex justify-content-between align-items-center p-2 mb-2">
+                <h2 className="mb-0">Trimmed Playlist Detail</h2>
+                <button className='btn btn-secondary' type="button" onClick={() => setShowPlaylistDetail(!showPlaylistDetail)}><i className={`fas fa-caret-${showPlaylistDetail ? "up" : "down"}`}></i> </button>
             </div>
+            {showPlaylistDetail &&
+                <>
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-lg-6 col-md-6 px-2">
+                                <div className="d-flex justify-content-between align-items-center px-2">
+                                    <p className="fs-5 fw-bold w-25 text-start mb-0">Speed:</p>
+                                    <select name="speed" onChange={handleSelectChange} className="form-select w-50 ">
+                                        <option value={1}>*1</option>
+                                        <option value={1.25}>*1.25</option>
+                                        <option value={1.5}>*1.5</option>
+                                        <option value={1.75}>*1.75</option>
+                                        <option value={2}>*2</option>
+                                        <option value={3}>*3</option>
+                                        <option value={5}>*5</option>
+                                    </select>
+                                </div>
+                                <div className="d-flex justify-content-between align-items-center px-2 mt-md-5">
+                                    <p className="fs-5 fw-bold w-25 w-md-auto text-start">Total Videos:</p>
+                                    <p className="w-50 text-md-start text-end">{time.length}</p>
+                                </div>
+                            </div>
+                            <div className="col-lg-6 col-md-6 px-2">
+                                <div className="d-flex justify-content-between align-items-center px-2">
+                                    <p className="fs-5 fw-bold w-25 text-start">Result For Speed:</p>
+                                    <p className="w-50 text-md-start text-end">{formatDuration(divideTheTime(totalTime, speed))}</p>
+                                </div>
+                                <div className="d-flex justify-content-between px-2 align-items-center overflow-auto">
+                                    <p className="fs-5 fw-bold w-25 text-start">Category:</p>
+                                    <p className="w-50 text-md-start text-end">{category}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>}
         </div>
     )
 }

@@ -34,10 +34,6 @@ export default function Details() {
             <PlaylistDetailCard handleSelectChange={handleSelectChange} speed={speed} />
             {show && <ChannelDetailCard showChannelDetail={showChannelDetail} setShowChannelDetail={setShowChannelDetail} channelDetail={channelDetail[0]} />}
             <TableDetailCard />
-            <TableComponent />
-            <div className="d-flex justify-content-center my-2 d-sm-none d-md-none">
-                <span className="fw-bold">Scroll to get more details</span>
-            </div>
         </>
     )
 }
