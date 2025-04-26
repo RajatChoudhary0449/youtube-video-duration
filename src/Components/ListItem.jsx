@@ -5,6 +5,7 @@ import toastNotification from '../utils/toastNotification';
 import { ClipLoader } from 'react-spinners';
 import useTableContext from '../hooks/useTableContext';
 import { isMobile } from '../constant/values';
+import "./../Styles/Transitions/ImageOverlay.css"
 export default function ListItem({ item, openModal }) {
     const offsetlength = isMobile ? 30 : 95;
     const { idx, curtime, detail } = item;
@@ -46,9 +47,14 @@ export default function ListItem({ item, openModal }) {
             <span className={`${showFull ? "d-none" : "d-inline"} text-primary`} onClick={() => setShowFull(true)} style={{ cursor: 'pointer' }}>Show Complete</span>
         </div>
         </td>,
-        "Thumbnail": <td key={"Thumbnail"} className='align-content-center' style={{ cursor: "pointer" }} onClick={() => openModal(detail.id)}><div className='d-flex justify-content-center'>{isLoading && <div>Loading Image...</div>}
-            <ClipLoader loading={isLoading}></ClipLoader>
-            <img src={imageURL} width={width} height={height} alt={`Thumbnail for video titled as: ${detail.title}`} onLoad={handleImageLoad} onError={handleImageError} ref={imgRef} style={{ display: "none" }} /></div>
+        "Thumbnail": <td key={"Thumbnail"} className='align-content-center' style={{ cursor: "pointer" }} onClick={() => openModal(detail.id)}>
+            <div className='d-flex justify-content-center'>{isLoading && <div>Loading Image...</div>}
+                <ClipLoader loading={isLoading}></ClipLoader>
+                <div className="imageContainer">
+                    <img src={imageURL} width={width} height={height} alt={`Thumbnail for video titled as: ${detail.title}`} onLoad={handleImageLoad} onError={handleImageError} ref={imgRef} style={{ display: "none" }} />
+                    <div className='overlay top-0' style={{width:width,height:height}}>Tap to Watch</div>
+                </div>
+            </div>
         </td>,
         "Duration": <td key={"Duration"} className='align-content-center text-center'><div>{formatDuration(curtime)}</div></td>,
         "Published Date": <td key={"Published Date"} className='align-content-center text-center'>{formatDate(detail.publishedAt.slice(0, 10))}</td>,

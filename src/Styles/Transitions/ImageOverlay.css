@@ -1,0 +1,29 @@
+.imageContainer{
+    position: relative;
+    cursor: pointer;
+}
+.overlay{
+    position:absolute;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    background-color: white;
+    height: 100%;
+    width: 80%;
+    opacity: 0%;
+    top:0;
+    transition: opacity 1s,transform 1s;
+}
+.imageContainer:hover .overlay{
+    display:flex;
+    z-index: 1;
+    opacity: 80%;
+    transform: scale(1.1);
+}
+.imageContainer:hover img{
+    transform: scale(1.1);
+    transition: transform 1s;
+}

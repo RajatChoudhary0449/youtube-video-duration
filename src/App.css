@@ -12,6 +12,13 @@ body {
 }
 
 
+@media (max-width:768px)
+{
+  input{
+    font-size: small !important;
+  }
+}
+
 h1 {
   font-family: "Barlow", sans-serif;
   font-weight: 700;
@@ -88,6 +95,9 @@ p {
 
 label{
   font-weight: bold;
+}
+input{
+  font-size: medium;
 }
 .container form{
   padding: 0px 20px;
