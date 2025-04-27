@@ -23,10 +23,11 @@ function App() {
   const [resultMessage, setResultMessage] = useState("");
   const [averageMessage, setAverageMessage] = useState("");
   const [showDetail, setShowDetail] = useState(false);
-  const [showTotalDuration,setShowTotalDuration]=useState(false);
-  const [showAverageDuration,setShowAverageDuration]=useState(false);
+  const [showTotalDuration, setShowTotalDuration] = useState(false);
+  const [showAverageDuration, setShowAverageDuration] = useState(false);
   const placeholderRef = useRef(0);
   const showButtonRef = useRef(null);
+  const [percentage, setPercentage] = useState(30);
   const array = useMemo(() => [
     "https://www.youtube.com/playlist?list=UID",
     "https://www.youtube.com/watch?v=UID&list=UID"
@@ -60,19 +61,21 @@ function App() {
     setShowTotalDuration(false);
     setShowAverageDuration(false);
     setShowDetail(false);
+    setPercentage(0);
     const [validated, validationMessage] = validation(start, end, link);
     if (!validated) {
       toastNotification(validationMessage, "error");
       return;
     }
     setFetching(true);
-    const [videoIds, message] = await fetchIDs(link);
+    const [videoIds, message] = await fetchIDs(link, percentage, setPercentage);
     if (videoIds.length === 0) {
       setFetching(false);
       toastNotification(message, "error");
       return;
     }
-    const [res, curmessage] = await fetchDetailsFromIds(videoIds);
+    setPercentage(40);
+    const [res, curmessage] = await fetchDetailsFromIds(videoIds, percentage, setPercentage);
     if (res.length === 0) {
       setFetching(false);
       toastNotification(curmessage, "error");
@@ -87,6 +90,7 @@ function App() {
       toastNotification("Start or End out of range", "info");
       return;
     }
+    setPercentage(80);
     const [curcategory, categoryMessage] = await fetchCategoryDetailFromVideoDetail(res);
     if (!curcategory.length) {
       setData([]);
@@ -97,8 +101,10 @@ function App() {
       return;
     }
     setCategory(curcategory);
+    setPercentage(90);
     const rawtimes = await getTimeAndDetailsFromData(res, start, end);
     const curtotaltime = rawtimes?.[rawtimes.length - 1]?.['totaltime'];
+    setPercentage(100);
     setData(res);
     setTime(rawtimes);
     settotalTime(curtotaltime);
@@ -110,13 +116,13 @@ function App() {
     toastNotification("Fetched Successfully", "success");
   }
   const handleStartChange = (e) => {
-    const cur= e.target.value.replace(/[^0-9]/g, "");
+    const cur = e.target.value.replace(/[^0-9]/g, "");
     if (cur === "") setStart(DEFAULTSTART);
     else setStart(Math.max(Math.floor(Number(cur)), 1))
   }
 
   const handleEndChange = (e) => {
-    const cur= e.target.value.replace(/[^0-9]/g, "");
+    const cur = e.target.value.replace(/[^0-9]/g, "");
     if (cur === "") setEnd(DEFAULTEND);
     else setEnd(Math.max(Math.floor(Number(cur)), 1))
   }
@@ -130,43 +136,52 @@ function App() {
       <div className="container" style={{ maxWidth: "850px", boxShadow: "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset" }}>
         <h1>YouTube Playlist Duration Calculator</h1>
         <form onSubmit={handleformrequest} name="Submit-Form" >
-          
+
           <div className='mb-4'>
             <label htmlFor="link">Link of the YouTube playlist:<i className="fa fa-asterisk text-danger"></i>
             </label>
-            <div class="input-group ">
+            <div className="input-group ">
               <input type="text" id="link" className="form-control w-75 p-2" ref={inputref} placeholder={array[placeholderRef.current]} disabled={fetching} autoFocus value={link}
                 onChange={(e) => handlechangelink(e)}
               />
-              <span class="input-group-text" onClick={() => setLink("")}><i className='fas fa-eraser'></i></span>
+              <span className="input-group-text" onClick={() => setLink("")}><i className='fas fa-eraser'></i></span>
             </div>
           </div>
 
           <div className='mb-4'>
             <label htmlFor="start">Starting Video Index (1-based):</label>
-            <div class="input-group ">
+            <div className="input-group ">
               <input type="number" id="start" placeholder="Start Index(Optional)" value={(start === DEFAULTSTART) ? '' : start} onChange={handleStartChange} min={1} step={1} disabled={fetching} className="form-control w-75 p-2" />
-              <span class="input-group-text" onClick={() => setStart(DEFAULTSTART)}><i className='fas fa-eraser'></i></span>
+              <span className="input-group-text" onClick={() => setStart(DEFAULTSTART)}><i className='fas fa-eraser'></i></span>
             </div>
           </div>
 
           <div className='mb-4'>
             <label htmlFor="end">Ending Video Index (1-based):</label>
-            <div class="input-group ">
+            <div className="input-group ">
               <input type="number" id="end" placeholder="End Index(Optional)" value={(end === DEFAULTEND) ? '' : end} onChange={handleEndChange} min={1} step={1} disabled={fetching} className="form-control w-75 p-2" />
-              <span class="input-group-text" onClick={() => setEnd(DEFAULTEND)}><i className='fas fa-eraser'></i></span>
+              <span className="input-group-text" onClick={() => setEnd(DEFAULTEND)}><i className='fas fa-eraser'></i></span>
             </div>
           </div>
           <button id="calculate" type='submit' className={`btn mb-3  btn-${fetching ? "secondary" : "success"} py-2 w-100`} disabled={fetching}>
             {fetching ? "Fetching..." : "Get Total Duration"}
           </button>
 
-          {fetching && <div className='d-flex justify-content-center'>
-            <SyncLoader loading={fetching} size={8}></SyncLoader>
-          </div>
+          {fetching && <>
+            <div className={`d-flex justify-content-center mb-3 position-relative`}>
+              <div className="progress w-50" style={{ height: "30px" }}>
+                <div className="progress-bar text-white bg-success" role="progressbar" style={{ width: `${percentage}%` }} >
+                </div>
+                <p className={`position-absolute fs-5 text-${percentage < 44 ? "secondary" : "white"}`} style={{ left: "45%" }}>{percentage}%</p>
+              </div>
+            </div>
+            <div className='d-flex justify-content-center'>
+              <SyncLoader loading={fetching} size={8}></SyncLoader>
+            </div>
+          </>
           }
-          <p className='fs-5'><b>{showTotalDuration&&"Total Duration: "}</b> {resultMessage}</p>
-          <p className='fs-5'><b>{showAverageDuration&&"Average Duration: "}</b>{averageMessage}</p>
+          <p className='fs-5'><b>{showTotalDuration && "Total Duration: "}</b> {resultMessage}</p>
+          <p className='fs-5'><b>{showAverageDuration && "Average Duration: "}</b>{averageMessage}</p>
 
           {!fetching &&
             <>

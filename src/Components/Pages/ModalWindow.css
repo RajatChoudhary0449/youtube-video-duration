@@ -1,53 +1,52 @@
 .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
 }
 
 .modal-content {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 70%;
-    height: 50vH;
-    background: white;
-    max-width: 800px;
-    max-height: 1000px;
-    padding: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  height: 50vh;
+  background: white;
+  max-width: 800px;
+  max-height: 1000px;
+  padding: 0;
 }
 
 .video-container {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .video-container div {
-    height: 100% !important;
-    width: 100% !important;
+  height: 100% !important;
+  width: 100% !important;
 }
 
-@media(max-width:768px)
-{
-    .close{
-        right:3% !important;
-        top:21% !important;
-    }
+@media (max-width: 768px) {
+  .close {
+    right: 3% !important;
+    top: 20% !important;
+  }
 }
 .close {
-    position: absolute;
-    top: 22%;
-    right: 22%;
-    font-size: 24px;
-    cursor: pointer;
+  position: absolute;
+  top: 22%;
+  right: 22%;
+  font-size: 24px;
+  cursor: pointer;
 }

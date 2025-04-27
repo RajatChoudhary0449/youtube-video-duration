@@ -251,7 +251,7 @@ export default function TableComponent() {
                     </p>}
                 <div className="table-wrapper" style={{ position: "relative", maxHeight: "100vh", overflow: "auto" }}>
                     <table className="table" onClick={() => setOpenAddModal(false)}>
-                        <thead className="position-sticky top-0">
+                        <thead className="position-sticky top-0" style={{zIndex:"1"}}>
                             <tr>
                                 {column.map((item, index) => (
                                     <th
