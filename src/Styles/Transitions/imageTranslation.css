@@ -1,0 +1,9 @@
+@media (min-width: 768px) {
+  .image {
+    transform: translateX(150%);
+    transition: transform 2s linear;
+  }
+  .image.active {
+    transform: translateX(0%);
+  }
+}

@@ -51,8 +51,8 @@ export default function ListItem({ item, openModal }) {
             <div className='d-flex justify-content-center'>{isLoading && <div>Loading Image...</div>}
                 <ClipLoader loading={isLoading}></ClipLoader>
                 <div className="imageContainer">
-                    <img src={imageURL} width={width} height={height} alt={`Thumbnail for video titled as: ${detail.title}`} onLoad={handleImageLoad} onError={handleImageError} ref={imgRef} style={{ display: "none" }} />
-                    <div className='overlay top-0' style={{width:width,height:height}}>Tap to Watch</div>
+                    <img src={imageURL} width={width} height={height} alt={`Thumbnail for video titled as: ${detail.title}`} onLoad={handleImageLoad} onError={handleImageError} ref={imgRef} style={{ display: "none" }} className='rounded-3' />
+                    <div className='overlay top-0 rounded-3' style={{width:width,height:height}}>Tap to Play</div>
                 </div>
             </div>
         </td>,

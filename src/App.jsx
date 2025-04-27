@@ -23,6 +23,8 @@ function App() {
   const [resultMessage, setResultMessage] = useState("");
   const [averageMessage, setAverageMessage] = useState("");
   const [showDetail, setShowDetail] = useState(false);
+  const [showTotalDuration,setShowTotalDuration]=useState(false);
+  const [showAverageDuration,setShowAverageDuration]=useState(false);
   const placeholderRef = useRef(0);
   const showButtonRef = useRef(null);
   const array = useMemo(() => [
@@ -53,8 +55,10 @@ function App() {
     setData([]);
     setTime([]);
     setFilteredData([]);
-    setResultMessage([]);
-    setAverageMessage([]);
+    setResultMessage("");
+    setAverageMessage("");
+    setShowTotalDuration(false);
+    setShowAverageDuration(false);
     setShowDetail(false);
     const [validated, validationMessage] = validation(start, end, link);
     if (!validated) {
@@ -98,8 +102,10 @@ function App() {
     setData(res);
     setTime(rawtimes);
     settotalTime(curtotaltime);
-    setResultMessage(`Total Duration: ${formatDuration(curtotaltime)}`);
-    setAverageMessage(`Average Duration: ${formatDuration(divideTheTime(curtotaltime, rawtimes.length))}`);
+    setShowTotalDuration(true);
+    setShowAverageDuration(true);
+    setResultMessage(`${formatDuration(curtotaltime)}`);
+    setAverageMessage(`${formatDuration(divideTheTime(curtotaltime, rawtimes.length))}`);
     setFetching(false);
     toastNotification("Fetched Successfully", "success");
   }
@@ -151,7 +157,7 @@ function App() {
               <span class="input-group-text" onClick={() => setEnd(DEFAULTEND)}><i className='fas fa-eraser'></i></span>
             </div>
           </div>
-          <button id="calculate" type='submit' className={`btn  btn-${fetching ? "secondary" : "success"} py-2 w-100`} disabled={fetching}>
+          <button id="calculate" type='submit' className={`btn mb-3  btn-${fetching ? "secondary" : "success"} py-2 w-100`} disabled={fetching}>
             {fetching ? "Fetching..." : "Get Total Duration"}
           </button>
 
@@ -159,8 +165,8 @@ function App() {
             <SyncLoader loading={fetching} size={8}></SyncLoader>
           </div>
           }
-          <p>{resultMessage}</p>
-          <p>{averageMessage}</p>
+          <p className='fs-5'><b>{showTotalDuration&&"Total Duration: "}</b> {resultMessage}</p>
+          <p className='fs-5'><b>{showAverageDuration&&"Average Duration: "}</b>{averageMessage}</p>
 
           {!fetching &&
             <>

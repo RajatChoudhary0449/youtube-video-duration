@@ -4,7 +4,7 @@ import { ClipLoader } from "react-spinners";
 import './../../App.css'
 import './../../Styles/Transitions/heightTransition.css'
 import './../../Styles/Transitions/ImageOverlay.css'
-import { isMobile } from './../../constant/values'
+import './../../Styles/Transitions/imageTranslation.css'
 export default function ChannelDetailCard({ showChannelDetail, setShowChannelDetail, channelDetail }) {
 
     const [loading, setLoading] = useState(true);
@@ -15,12 +15,12 @@ export default function ChannelDetailCard({ showChannelDetail, setShowChannelDet
     const imgRef = useRef();
     const handleOnLoad = () => {
         setLoading(false);
-        imgRef.current.style.display = "block";
+        // imgRef.current.style.display = "block";
     }
     const handleOnError = () => {
         setLoading(false);
         setImageUrl(defaultImage);
-        imgRef.current.style.display = "block"
+        // imgRef.current.style.display = "block"
     }
     return (
         <div className='container mb-2'>
@@ -30,15 +30,15 @@ export default function ChannelDetailCard({ showChannelDetail, setShowChannelDet
             </div>
             <div className={`container main-container ${showChannelDetail && "show"}`}>
                 <div className="row">
-                    <div className="col-lg-6 col-md-6 p-2">
-                        <div className='d-flex justify-content-center flex-column imageContainer'>
+                    <div className="col-lg-6 col-md-6 p-2 overflow-hidden">
+                        <div className='d-flex justify-content-center flex-column mt-2 p-2'>
                             {loading && <div className="d-flex justify-content-center">Loading Image...</div>}
-                            <div className="d-flex justify-content-center mb-2">
+                            <div className="d-flex justify-content-center ">
                                 <ClipLoader loading={loading}></ClipLoader>
                             </div>
-                            <div className="d-flex justify-content-center">
-                                <img src={imageUrl} ref={imgRef} onLoad={handleOnLoad} onError={handleOnError} style={{ maxWidth: "25rem", display: "none" }} width={"80%"} height={"auto"}></img>
-                                <div className=" overlay" onClick={() => window.open(`https://www.youtube.com/${channelDetail?.customUrl}`, "_blank")}>Click to visit the channel</div>
+                            <div className="d-flex justify-content-center imageContainer">
+                                <img src={imageUrl} ref={imgRef} onLoad={handleOnLoad} onError={handleOnError} style={{ maxWidth: "25rem"}} width={"80%"} height={"auto"} className={`image ${showChannelDetail&&"active"} rounded-2`}></img>
+                                <div className="rounded-2 overlay" onClick={() => window.open(`https://www.youtube.com/${channelDetail?.customUrl}`, "_blank")}>Click to visit the channel</div>
                             </div>
                         </div>
                     </div>
